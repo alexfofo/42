@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 15:38:02 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/04 18:26:04 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/05 16:35:58 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static int		ft_save_rooms(char *line, t_game *game)
 	game->room->name = ft_strdup(split[0]);
 	if (game->i_start)
 	{
-		ft_putstr_fd("HOLAAAAAA", 2);
 		game->start = game->room->name;
 		game->i_start = 0;
 	}
@@ -57,8 +56,55 @@ static int		ft_save_rooms(char *line, t_game *game)
 
 static int		ft_save_links(char *line, t_game *game)
 {
-	line = NULL;
-	game = NULL;
+	char		*lk1;
+	char		*lk2;
+	t_room		*tmproom;
+	
+	lk1 = ft_get_name(line, '-', 0);
+	lk2 = ft_get_name(line, '-', 1);
+	tmproom = game->tmp_room;
+	while (ft_strcmp(lk1, tmproom->name))
+		tmproom = tmproom->next;
+	while (tmproom->link != NULL)
+	{
+		if (tmproom->link->next == NULL)
+		{
+			tmproom->link->next = ft_new_link();
+			tmproom->link = tmproom->link->next;
+			break ;
+		}
+		tmproom->link = tmproom->link->next;
+	}
+	if (tmproom->link == NULL)
+	{
+		tmproom->link = ft_new_link();
+		tmproom->tmp_link = tmproom->link;
+	}
+	tmproom->link->name = lk2;
+	tmproom = game->tmp_room/* free il faudra */;
+/*	while (ft_strcmp(lk2, tmproom->name))
+		tmproom = tmproom->next;
+	while (tmproom->link != NULL)
+		tmproom->link = tmproom->link->next;
+	tmproom->link = ft_new_link();*/
+/**/while (ft_strcmp(lk2, tmproom->name))
+		tmproom = tmproom->next;
+	while (tmproom->link != NULL)
+	{
+		if (tmproom->link->next == NULL)
+		{
+			tmproom->link->next = ft_new_link();
+			tmproom->link = tmproom->link->next;
+			break ;
+		}
+		tmproom->link = tmproom->link->next;
+	}
+	if (tmproom->link == NULL)
+	{
+		tmproom->link = ft_new_link();
+		tmproom->tmp_link = tmproom->link;
+	}/**//*la partie en com au dessu pourrai remplacer la partie entre comm*/
+	tmproom->link->name = lk1;/* free il faudra */
 	return (0);
 }
 

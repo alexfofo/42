@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:27:50 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/04 18:25:57 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/05 16:24:42 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct		s_room
 	int				coord_x;
 	int				coord_y;
 	t_link			*link;
+	t_link			*tmp_link;
 	struct s_room	*next;
 }					t_room;
 
@@ -47,10 +48,14 @@ int					is_number(char *line);
 int					how_much_c_in_str(char c, char *str);
 int					ft_init_vars(int *index, char **line, t_game *game);
 t_game				ft_save_input(void);
-int					ft_check_line(int index, char *line);
-int					ft_check_coords(int index, char *line);
-int					ft_check_links(char *line);
+int					ft_check_line(int index, char *line, t_game *game);
+int					ft_check_coords(int index, char *line, t_game *game);
+int					ft_check_links(char *line, t_game *game);
 int					ft_save_line(int index, char *line, t_game *game);
 t_room				*ft_new_room(void);
+int					where_is_c_in_str(char c, char *str);
+char				*ft_get_name(char *line, char c, int i);
+int					ft_is_str_a_room(char *str, t_room *room);
+t_link				*ft_new_link(void);
 
 #endif /* !LEMLIN2_H */

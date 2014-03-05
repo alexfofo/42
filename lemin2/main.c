@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:09:03 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/04 18:26:00 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/05 16:25:09 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,22 @@ int			main(void)
 {
 	ft_save_input();
 	return (0);
+}
+
+/*
+**
+** Cette fonction est a supprimer
+** Elle permet juste dafficher les link pour une room donnee
+*/
+static void		ft_display_links(t_link *link)
+{
+	ft_putstr_fd(" liens: ", 2);
+	while (link)
+	{
+		ft_putstr_fd(link->name, 2);
+		ft_putstr_fd(" - ", 2);
+		link = link->next;
+	}
 }
 
 t_game		ft_save_input(void)
@@ -34,7 +50,7 @@ t_game		ft_save_input(void)
 				ft_putendl_fd("I dont like empty line", 2);
 				exit(0);
 			}
-			index = ft_check_line(index, line);
+			index = ft_check_line(index, line, &game);
 			if (index >= 0)
 				index = ft_save_line(index, line, &game);
 			if (index == -1)
@@ -46,15 +62,12 @@ t_game		ft_save_input(void)
 			}
 			if (index < 0)
 				index *= -1;
-/*			ft_putstr("                        line:");
-			ft_putstr(line);
-			ft_putendl(".");*/
 		}
 	}
-		ft_putstr("nb ant: ");
+	ft_putendl_fd("\033[33m Etat general apres avoir save\033[0m", 2);
+		ft_putstr("\nnb ant: ");
 		ft_putnbr(game.nb_ant);
 		ft_putstr("\n");
-		ft_putnbr(game.i_start);
 		ft_putstr("char start: ");
 		ft_putendl(game.start);
 		ft_putstr("char end: ");
@@ -67,6 +80,8 @@ t_game		ft_save_input(void)
 			ft_putnbr(game.tmp_room->coord_x);
 			ft_putstr(" . ");
 			ft_putnbr(game.tmp_room->coord_y);
+			if (game.tmp_room->tmp_link)
+				ft_display_links(game.tmp_room->tmp_link);
 			ft_putstr("\n");
 			game.tmp_room = game.tmp_room->next;
 		}

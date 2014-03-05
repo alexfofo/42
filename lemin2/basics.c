@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:49:56 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/04 14:16:08 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/05 10:59:04 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int			is_number(char *line)
 	return (1);
 }
 
-/*int			c_is_in_str(char c, char *str)
+int			where_is_c_in_str(char c, char *str)
 {
 	int		i;
 
@@ -40,10 +40,10 @@ int			is_number(char *line)
 	while (str[++i])
 	{
 		if (str[i] == c)
-			return (1);
+			return (i);
 	}
-	return (0);
-}*/
+	return (-1);
+}
 
 int			how_much_c_in_str(char c, char *str)
 {
