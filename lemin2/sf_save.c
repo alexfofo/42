@@ -6,18 +6,23 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 14:51:52 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/05 14:58:23 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/07 14:26:56 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin2.h"
 
-t_link			*ft_new_link(void)
+int				set_start_end(t_game *game)
 {
-	t_link		*link;
-
-	link = (t_link *)malloc(sizeof(t_link));
-	link->name = NULL;
-	link->next = NULL;
-	return (link);
+	if (game->i_start)
+	{
+		game->start = game->room->name;
+		game->i_start = 0;
+	}
+	if (game->i_end)
+	{
+		game->end = game->room->name;
+		game->i_end = 0;
+	}
+	return (0);
 }

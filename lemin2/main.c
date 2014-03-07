@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:09:03 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/05 16:25:09 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/07 14:27:19 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int			main(void)
 }
 
 /*
-**
 ** Cette fonction est a supprimer
 ** Elle permet juste dafficher les link pour une room donnee
 */
@@ -64,8 +63,8 @@ t_game		ft_save_input(void)
 				index *= -1;
 		}
 	}
-	ft_putendl_fd("\033[33m Etat general apres avoir save\033[0m", 2);
-		ft_putstr("\nnb ant: ");
+	ft_putendl_fd("\033[33m\n Etat general apres avoir save\033[0m", 2);
+		ft_putstr("nb ant: ");
 		ft_putnbr(game.nb_ant);
 		ft_putstr("\n");
 		ft_putstr("char start: ");

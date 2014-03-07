@@ -6,41 +6,11 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/04 16:00:20 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/05 14:50:59 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/07 14:26:12 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin2.h"
-
-char			*ft_get_room_name(char *line)
-{
-	int		i;
-	char	*ret;
-
-	while (line[i] != ' ')
-		i++;
-	ret = (char *)malloc(sizeof(char) * (i + 1));
-	ret[i] = '\0';
-	while (--i >= 0)
-		ret[i] = line[i];
-	return (ret);
-}
-
-/*
-** Cette fonction est a bouger dans sf_check
-*/
-t_room			*ft_new_room(void)
-{
-	t_room		*room;
-
-	room = (t_room *)malloc(sizeof(t_room));
-	room->name = NULL;
-	room->coord_x = -1;
-	room->coord_y = -1;
-	room->link = NULL;
-	room->next = NULL;
-	return (room);
-}
 
 char			*ft_get_name(char *line, char c, int i)
 {
@@ -79,4 +49,27 @@ int				ft_is_str_a_room(char *str, t_room *room)
 		room = room->next;
 	}
 	return (0);
+}
+
+t_room          *ft_new_room(void)
+{
+	t_room      *room;
+
+	room = (t_room *)malloc(sizeof(t_room));
+	room->name = NULL;
+	room->coord_x = -1;
+	room->coord_y = -1;
+	room->link = NULL;
+	room->next = NULL;
+	return (room);
+}
+
+t_link          *ft_new_link(void)
+{
+	t_link      *link;
+
+	link = (t_link *)malloc(sizeof(t_link));
+	link->name = NULL;
+	link->next = NULL;
+	return (link);
 }

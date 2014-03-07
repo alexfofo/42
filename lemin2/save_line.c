@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 15:38:02 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/05 16:35:58 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/07 14:27:14 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ static int		ft_save_ant(char *line, t_game *game)
 	return (0);
 }
 
+/*
+**	y'a moyen de virer les tmp_room et tmp_link dans
+**	les structures en utilisant des copies de game->room
+**	et de game->room->link dans les deux fonctions ci dessous
+*/
 static int		ft_save_rooms(char *line, t_game *game)
 {
 	char		**split;
@@ -34,18 +39,9 @@ static int		ft_save_rooms(char *line, t_game *game)
 	}
 	split = ft_strsplit(line, ' ');
 	game->room->name = ft_strdup(split[0]);
-	if (game->i_start)
-	{
-		game->start = game->room->name;
-		game->i_start = 0;
-	}
-	if (game->i_end)
-	{
-		game->end = game->room->name;
-		game->i_end = 0;
-	}
 	game->room->coord_x = ft_atoi(split[1]);
 	game->room->coord_y = ft_atoi(split[2]);
+	set_start_end(game);
 	free(split[0]);
 	free(split[1]);
 	free(split[2]);
@@ -54,6 +50,10 @@ static int		ft_save_rooms(char *line, t_game *game)
 	return (0);
 }
 
+/*
+**	Il faudrai gerer le fait de ne pas enregistrer un lien
+**	si il est deja enregistre
+*/
 static int		ft_save_links(char *line, t_game *game)
 {
 	char		*lk1;
@@ -80,14 +80,9 @@ static int		ft_save_links(char *line, t_game *game)
 		tmproom->link = ft_new_link();
 		tmproom->tmp_link = tmproom->link;
 	}
-	tmproom->link->name = lk2;
-	tmproom = game->tmp_room/* free il faudra */;
-/*	while (ft_strcmp(lk2, tmproom->name))
-		tmproom = tmproom->next;
-	while (tmproom->link != NULL)
-		tmproom->link = tmproom->link->next;
-	tmproom->link = ft_new_link();*/
-/**/while (ft_strcmp(lk2, tmproom->name))
+	tmproom->link->name = lk2;/* free il faudra */
+	tmproom = game->tmp_room;
+	while (ft_strcmp(lk2, tmproom->name))
 		tmproom = tmproom->next;
 	while (tmproom->link != NULL)
 	{
@@ -103,7 +98,7 @@ static int		ft_save_links(char *line, t_game *game)
 	{
 		tmproom->link = ft_new_link();
 		tmproom->tmp_link = tmproom->link;
-	}/**//*la partie en com au dessu pourrai remplacer la partie entre comm*/
+	}
 	tmproom->link->name = lk1;/* free il faudra */
 	return (0);
 }
