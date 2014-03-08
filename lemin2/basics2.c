@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/04 16:00:20 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/07 14:26:12 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/08 15:05:08 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,6 @@ char			*ft_get_name(char *line, char c, int i)
 		ret[j] = line[j];
 	ret[j] = '\0';
 	return (ret);
-}
-
-int				ft_is_str_a_room(char *str, t_room *room)
-{
-	while (room)
-	{
-		if (!(ft_strcmp(room->name, str)))
-			return (1);
-		room = room->next;
-	}
-	return (0);
 }
 
 t_room          *ft_new_room(void)

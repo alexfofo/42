@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 15:38:02 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/07 14:27:14 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/08 18:20:48 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,6 @@ static int		ft_save_ant(char *line, t_game *game)
 	return (0);
 }
 
-/*
-**	y'a moyen de virer les tmp_room et tmp_link dans
-**	les structures en utilisant des copies de game->room
-**	et de game->room->link dans les deux fonctions ci dessous
-*/
 static int		ft_save_rooms(char *line, t_game *game)
 {
 	char		**split;
@@ -50,56 +45,17 @@ static int		ft_save_rooms(char *line, t_game *game)
 	return (0);
 }
 
-/*
-**	Il faudrai gerer le fait de ne pas enregistrer un lien
-**	si il est deja enregistre
-*/
 static int		ft_save_links(char *line, t_game *game)
 {
 	char		*lk1;
 	char		*lk2;
-	t_room		*tmproom;
 	
 	lk1 = ft_get_name(line, '-', 0);
 	lk2 = ft_get_name(line, '-', 1);
-	tmproom = game->tmp_room;
-	while (ft_strcmp(lk1, tmproom->name))
-		tmproom = tmproom->next;
-	while (tmproom->link != NULL)
-	{
-		if (tmproom->link->next == NULL)
-		{
-			tmproom->link->next = ft_new_link();
-			tmproom->link = tmproom->link->next;
-			break ;
-		}
-		tmproom->link = tmproom->link->next;
-	}
-	if (tmproom->link == NULL)
-	{
-		tmproom->link = ft_new_link();
-		tmproom->tmp_link = tmproom->link;
-	}
-	tmproom->link->name = lk2;/* free il faudra */
-	tmproom = game->tmp_room;
-	while (ft_strcmp(lk2, tmproom->name))
-		tmproom = tmproom->next;
-	while (tmproom->link != NULL)
-	{
-		if (tmproom->link->next == NULL)
-		{
-			tmproom->link->next = ft_new_link();
-			tmproom->link = tmproom->link->next;
-			break ;
-		}
-		tmproom->link = tmproom->link->next;
-	}
-	if (tmproom->link == NULL)
-	{
-		tmproom->link = ft_new_link();
-		tmproom->tmp_link = tmproom->link;
-	}
-	tmproom->link->name = lk1;/* free il faudra */
+	sf_save_link(game->tmp_room, lk1, lk2);
+	sf_save_link(game->tmp_room, lk2, lk1);
+	free(lk1);
+	free(lk2);
 	return (0);
 }
 

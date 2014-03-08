@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 12:06:01 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/07 13:51:03 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/08 15:05:46 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,17 @@ int			sf_check_links(char *line, t_game *game)
 	{
 		ft_putendl_fd("please no spaces 0.0", 2);
 		return (-5);
+	}
+	return (0);
+}
+
+int             ft_is_str_a_room(char *str, t_room *room)
+{
+	while (room)
+	{
+		if (!(ft_strcmp(room->name, str)))
+			return (1);
+		room = room->next;
 	}
 	return (0);
 }
