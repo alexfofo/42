@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:09:03 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/11 11:09:35 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 12:48:01 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,30 @@ t_game		*ft_find_trail(t_game *game)
 {
 /*	t_trail		trail;*/
 	int			nb_trail_max;
+	t_room		*start;
+	t_room		*end;
+	t_link		*path;
+	t_link		*beg;
 
+	path = (t_link *)malloc(sizeof(t_link));
+	path->name = ft_strdup(game->start);
+	beg = path;
 	nb_trail_max = ft_find_nb_trail_max(game->tmp_room, game->start, game->end);
 	ft_putstr_fd("nb_trail_max = ", 2);
 	ft_putnbr_fd(nb_trail_max, 2);
 	ft_putstr_fd("\n", 2);
+	start = game->tmp_room;
+	while (ft_strcmp(start->name, game->start))
+			start = start->next;
+	end = game->tmp_room;
+	while (ft_strcmp(end->name, game->end))
+			end = end->next;
+	if (ft_find_path(game, start, end, &path) == 1)
+	{
+		ft_print_path(game, beg);
+	}
+	else
+		ft_putendl_fd("no trail", 2);
 	return (game);
 }
 

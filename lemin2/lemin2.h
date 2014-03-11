@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:27:50 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/10 13:33:42 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 12:32:03 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ typedef struct		s_game
 	t_room			*tmp_room;
 }					t_game;
 
+int			ft_find_path(t_game *game, t_room *start, t_room *end, t_link **p);
+
 int			ft_init_vars(int *index, char **line, t_game **game);
 t_game		*ft_save_input(t_game *game);
 t_game		*ft_find_trail(t_game *game);
@@ -65,6 +67,7 @@ char		*ft_get_name(char *line, char c, int i);
 */
 int			ft_find_nb_trail_max(t_room *room, char *start, char *end);
 int			ft_count_links(t_link *link);
+void		ft_print_path(t_game *game, t_link *path);
 
 /*
 **	sf_check

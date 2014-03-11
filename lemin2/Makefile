@@ -6,7 +6,7 @@
 #    By: makoudad <makoudad@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/12/23 11:09:10 by makoudad          #+#    #+#              #
-#    Updated: 2014/03/11 11:19:51 by makoudad         ###   ########.fr        #
+#    Updated: 2014/03/11 12:33:02 by afollin          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -30,7 +30,8 @@ SRC =		main.c 					\
 			check_line.c			\
 			save_line.c				\
 			sf_check.c				\
-			sf_save.c
+			sf_save.c				\
+			find_path.c
 
 OBJ =		$(SRC:.c=.o)
 
@@ -38,7 +39,7 @@ all:		$(NAME)
 
 $(NAME):	$(OBJ)
 			$(MAKELIB)
-			$(GCC) -o $(NAME) $(OBJ) $(LIBA) $(HDFLAGS) -ltermcap
+			$(GCC) -o $(NAME) $(OBJ) $(LIBA) $(HDFLAGS)
 
 clean:
 			rm -f $(OBJ)

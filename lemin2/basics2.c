@@ -6,11 +6,36 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/04 16:00:20 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/11 11:25:57 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 12:52:15 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemin2.h"
+
+void		ft_print_path(t_game *game, t_link *path)
+{
+	int			ant;
+	t_link		*beg;
+
+	beg = path;
+	ant = 1;
+	while (ant <= game->nb_ant)
+	{
+		path = beg;
+		path = path->next;
+		while (path)
+		{
+			ft_putnbr(ant);
+			ft_putstr("-");
+			ft_putstr(path->name);
+			if (path->next)
+				ft_putstr("  ");
+			path = path->next;
+		}
+		ft_putchar('\n');
+		++ant;
+	}
+}
 
 int			ft_find_nb_trail_max(t_room *room, char *start, char *end)
 {

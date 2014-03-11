@@ -1,5 +1,5 @@
 4
-5 5 5
+4 5 5
 ##start
 6 5 4
 retw 1 2
@@ -7,10 +7,6 @@ retw 1 2
 qwerty 8 9
 1 2 5
 #end
-5-6
 6-retw
+6-1
 retw-6
-qwerty-6
-qwerty-5
-qwerty-1
-qwerty-retw
