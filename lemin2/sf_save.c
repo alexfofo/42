@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/05 14:51:52 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/10 11:35:25 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 17:53:26 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,13 @@ int				sf_save_link(t_room *room, char *room_name, char *link_name)
 	return (0);
 }
 
-t_link          *ft_new_link(void)
+t_link			*ft_new_link(void)
 {
-	t_link      *link;
+	t_link		*link;
 
 	link = (t_link *)malloc(sizeof(t_link));
 	link->name = NULL;
 	link->next = NULL;
+	link->prev = NULL;
 	return (link);
 }

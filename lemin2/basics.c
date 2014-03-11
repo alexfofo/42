@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:49:56 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/10 11:34:59 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 17:52:02 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int			is_comment(char *line)
 
 int			is_number(char *line)
 {
+	if (*line == '-')
+		line++;
 	while (*line)
 	{
 		if (!(ft_isdigit(*line)))
@@ -59,11 +61,11 @@ int			how_much_c_in_str(char c, char *str)
 	return (i);
 }
 
-char            *ft_get_name(char *line, char c, int i)
+char		*ft_get_name(char *line, char c, int i)
 {
-	char        *ret;
-	int         k;
-	int         j;
+	char		*ret;
+	int			k;
+	int			j;
 
 	if (line == NULL)
 		return (NULL);

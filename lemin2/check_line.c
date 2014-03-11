@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:43:39 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/11 12:54:28 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 18:02:34 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ static int			ft_check_links(char *line, t_game *game)
 	t_room		*tmproom;
 	int			i;
 
-	if ((i = sf_check_links(line, game)))/*check some case d'error*/
+	if ((i = sf_check_links(line, game)))
 		return (i);
-	name = ft_get_name(line, '-', 0);/*premier mot*/
+	name = ft_get_name(line, '-', 0);
 	tmproom = game->tmp_room;
 	if (ft_is_str_a_room(name, tmproom))
 	{
-		free(name);/* il faut free tmproom aussi 0.0 */
-		name = ft_get_name(line, '-', 1);/*deuxieme mot*/
+		free(name);
+		name = ft_get_name(line, '-', 1);
 		tmproom = game->tmp_room;
-		if (ft_is_str_a_room(name, tmproom))/* il faut free tmproom */
+		if (ft_is_str_a_room(name, tmproom))
 		{
 			free(name);
 			return (2);
@@ -70,7 +70,8 @@ int					ft_check_line(int index, char *line, t_game *game)
 {
 	if (index == 0)
 	{
-		if (!(is_number(line)) || *line == '0')
+		if (*line == '-' || ft_strlen(line) > 9
+			|| !(is_number(line)) || *line == '0')
 		{
 			ft_putstr_fd("Error about the number of ant\n", 2);
 			exit(0);

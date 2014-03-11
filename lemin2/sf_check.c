@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 12:06:01 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/10 13:29:02 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 17:53:04 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,12 @@
 int			sf_check_room_name(char *line, t_game *game)
 {
 	char		*name;
+	char		**split;
 
-	if (how_much_c_in_str('-', line) > 0)
+	split = ft_strsplit(line, ' ');
+	if ((split[0][0] != '-' && split[1] && split[1][0] != '-'
+		&& split[2] && split[2][0] != '-' && how_much_c_in_str('-', line) > 0)
+		|| (!split[1] && how_much_c_in_str('-', line) > 0))
 	{
 		if (game->room == NULL || game->i_start || game->i_end)
 		{
@@ -93,7 +97,7 @@ int			sf_check_links(char *line, t_game *game)
 	return (0);
 }
 
-int             ft_is_str_a_room(char *str, t_room *room)
+int			ft_is_str_a_room(char *str, t_room *room)
 {
 	while (room)
 	{
@@ -104,9 +108,9 @@ int             ft_is_str_a_room(char *str, t_room *room)
 	return (0);
 }
 
-t_room          *ft_new_room(void)
+t_room		*ft_new_room(void)
 {
-	t_room      *room;
+	t_room		*room;
 
 	room = (t_room *)malloc(sizeof(t_room));
 	room->name = NULL;

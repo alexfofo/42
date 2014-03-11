@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 15:38:02 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/10 12:51:07 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 16:43:33 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int		ft_save_links(char *line, t_game *game)
 {
 	char		*lk1;
 	char		*lk2;
-	
+
 	lk1 = ft_get_name(line, '-', 0);
 	lk2 = ft_get_name(line, '-', 1);
 	sf_save_link(game->tmp_room, lk1, lk2);

@@ -6,19 +6,20 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:27:50 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/11 12:32:03 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 17:49:44 by makoudad         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEMIN2_H
 # define LEMIN2_H
 
-# include "libft/includes/libft.h"
 # include <stdlib.h>
+# include "libft/includes/libft.h"
 
 typedef struct		s_link
 {
 	char			*name;
+	struct s_link	*prev;
 	struct s_link	*next;
 }					t_link;
 
