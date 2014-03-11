@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:09:03 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/07 14:27:19 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/11 11:09:35 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,26 @@
 
 int			main(void)
 {
-	ft_save_input();
+	t_game		*game;
+
+	game = NULL;
+	game = ft_save_input(game);
+	/* faire un last check pour verifier quon a bien toutes les
+	 * infos necessaire comme un start et un end pa exemple*/
+	game = ft_find_trail(game);
 	return (0);
+}
+
+t_game		*ft_find_trail(t_game *game)
+{
+/*	t_trail		trail;*/
+	int			nb_trail_max;
+
+	nb_trail_max = ft_find_nb_trail_max(game->tmp_room, game->start, game->end);
+	ft_putstr_fd("nb_trail_max = ", 2);
+	ft_putnbr_fd(nb_trail_max, 2);
+	ft_putstr_fd("\n", 2);
+	return (game);
 }
 
 /*
@@ -24,7 +42,7 @@ int			main(void)
 */
 static void		ft_display_links(t_link *link)
 {
-	ft_putstr_fd(" liens: ", 2);
+	ft_putstr_fd("\033[1;33m liens: ", 2);
 	while (link)
 	{
 		ft_putstr_fd(link->name, 2);
@@ -33,9 +51,36 @@ static void		ft_display_links(t_link *link)
 	}
 }
 
-t_game		ft_save_input(void)
+static void		ft_print(t_game *game)
 {
-	t_game		game;
+	t_room		*tmproom;
+
+	tmproom = game->tmp_room;
+	ft_putendl_fd("\033[33m\n Etat general apres avoir save\033[0m", 2);
+	ft_putstr("nb ant: ");
+	ft_putnbr(game->nb_ant);
+	ft_putstr("\n");
+	ft_putstr("char start: ");
+	ft_putendl(game->start);
+	ft_putstr("char end: ");
+	ft_putendl(game->end);
+	while (tmproom != NULL)
+	{
+		ft_putstr("room: ");
+		ft_putstr(tmproom->name);
+		ft_putstr(" . ");
+		ft_putnbr(tmproom->coord_x);
+		ft_putstr(" . ");
+		ft_putnbr(tmproom->coord_y);
+		if (tmproom->tmp_link)
+			ft_display_links(tmproom->tmp_link);
+		ft_putstr("\n\033[0m");
+		tmproom = tmproom->next;
+	}
+}
+
+t_game		*ft_save_input(t_game *game)
+{
 	char		*line;
 	int			index;
 
@@ -49,54 +94,35 @@ t_game		ft_save_input(void)
 				ft_putendl_fd("I dont like empty line", 2);
 				exit(0);
 			}
-			index = ft_check_line(index, line, &game);
+			index = ft_check_line(index, line, game);
 			if (index >= 0)
-				index = ft_save_line(index, line, &game);
+				index = ft_save_line(index, line, game);
 			if (index == -1)
 			{
 				if (!(ft_strcmp(line + 2, "start")))
-					game.i_start = 1;
+					game->i_start = 1;
 				else
-					game.i_end = 1;
+					game->i_end = 1;
 			}
 			if (index < 0)
 				index *= -1;
 		}
 	}
-	ft_putendl_fd("\033[33m\n Etat general apres avoir save\033[0m", 2);
-		ft_putstr("nb ant: ");
-		ft_putnbr(game.nb_ant);
-		ft_putstr("\n");
-		ft_putstr("char start: ");
-		ft_putendl(game.start);
-		ft_putstr("char end: ");
-		ft_putendl(game.end);
-		while (game.tmp_room)
-		{
-			ft_putstr("room: ");
-			ft_putstr(game.tmp_room->name);
-			ft_putstr(" . ");
-			ft_putnbr(game.tmp_room->coord_x);
-			ft_putstr(" . ");
-			ft_putnbr(game.tmp_room->coord_y);
-			if (game.tmp_room->tmp_link)
-				ft_display_links(game.tmp_room->tmp_link);
-			ft_putstr("\n");
-			game.tmp_room = game.tmp_room->next;
-		}
+	ft_print(game);
 	return(game);
 }
 
-int			ft_init_vars(int *index, char **line, t_game *game)
+int			ft_init_vars(int *index, char **line, t_game **game)
 {
 	*index = 0;
 	*line = NULL;
-	game->nb_ant = 0;
-	game->i_start = 0;
-	game->i_end = 0;
-	game->start = NULL;
-	game->end = NULL;
-	game->room = NULL;
-	game->tmp_room = NULL;
+	(*game) = (t_game *)malloc(sizeof(t_game));
+	(*game)->nb_ant = 0;
+	(*game)->i_start = 0;
+	(*game)->i_end = 0;
+	(*game)->start = NULL;
+	(*game)->end = NULL;
+	(*game)->room = NULL;
+	(*game)->tmp_room = NULL;
 	return (0);
 }

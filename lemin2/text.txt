@@ -9,6 +9,8 @@ qwerty 8 9
 #end
 5-6
 6-retw
-retw-qwerty
 retw-6
-#END
+qwerty-6
+qwerty-5
+qwerty-1
+qwerty-retw

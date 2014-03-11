@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:49:56 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/05 10:59:04 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/10 11:34:59 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,32 @@ int			how_much_c_in_str(char c, char *str)
 		str++;
 	}
 	return (i);
+}
+
+char            *ft_get_name(char *line, char c, int i)
+{
+	char        *ret;
+	int         k;
+	int         j;
+
+	if (line == NULL)
+		return (NULL);
+	k = 0;
+	while (k < i)
+	{
+		if (*line == c)
+			k++;
+		line++;
+	}
+	k = 0;
+	while (line[k] && line[k] != c)
+		k++;
+	if (k == 0)
+		return (NULL);
+	ret = (char *)malloc(sizeof(char) * (k + 1));
+	j = -1;
+	while (++j < k)
+		ret[j] = line[j];
+	ret[j] = '\0';
+	return (ret);
 }

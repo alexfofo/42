@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/07 12:06:01 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/08 15:05:46 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/10 13:29:02 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,17 @@ int             ft_is_str_a_room(char *str, t_room *room)
 		room = room->next;
 	}
 	return (0);
+}
+
+t_room          *ft_new_room(void)
+{
+	t_room      *room;
+
+	room = (t_room *)malloc(sizeof(t_room));
+	room->name = NULL;
+	room->coord_x = -1;
+	room->coord_y = -1;
+	room->link = NULL;
+	room->next = NULL;
+	return (room);
 }

@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/03 14:27:50 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/08 17:58:51 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/10 13:33:42 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ typedef struct		s_game
 	t_room			*tmp_room;
 }					t_game;
 
-int			ft_init_vars(int *index, char **line, t_game *game);
-t_game		ft_save_input(void);
+int			ft_init_vars(int *index, char **line, t_game **game);
+t_game		*ft_save_input(t_game *game);
+t_game		*ft_find_trail(t_game *game);
 
 int			ft_check_line(int index, char *line, t_game *game);
 
@@ -57,13 +58,13 @@ int			is_comment(char *line);
 int			is_number(char *line);
 int			where_is_c_in_str(char c, char *str);
 int			how_much_c_in_str(char c, char *str);
+char		*ft_get_name(char *line, char c, int i);
 
 /*
 **	basics2
 */
-char		*ft_get_name(char *line, char c, int i);
-t_room		*ft_new_room(void);
-t_link		*ft_new_link(void);
+int			ft_find_nb_trail_max(t_room *room, char *start, char *end);
+int			ft_count_links(t_link *link);
 
 /*
 **	sf_check
@@ -72,6 +73,7 @@ int			sf_check_room_name(char *line, t_game *game);
 int			sf_check_coords_syntax(char *line);
 int			sf_check_links(char *line, t_game *game);
 int			ft_is_str_a_room(char *str, t_room *room);
+t_room		*ft_new_room(void);
 
 /*
 **	sf_save
@@ -79,5 +81,6 @@ int			ft_is_str_a_room(char *str, t_room *room);
 int			set_start_end(t_game *game);
 int			ft_is_str_a_link(char *str, t_link *link);
 int			sf_save_link(t_room *room, char *room_name, char *link_name);
+t_link		*ft_new_link(void);
 
 #endif /* !LEMLIN2_H */
