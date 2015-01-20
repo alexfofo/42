@@ -6,13 +6,22 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/19 13:02:12 by afollin           #+#    #+#             */
-/*   Updated: 2014/01/14 10:51:43 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:01:06 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
 
-static int		get_to_begining(char *str);
+static int		get_to_begining(char *str)
+{
+	int		j;
+
+	j = 0;
+	while ((str[j] == ' ' || str[j] == '\n' || str[j] == '\v' || str[j] == '\t'
+			|| str[j] == '\r' || str[j] == '\f' || str[j] == '+') && str[j])
+		j++;
+	return (j);
+}
 
 int				ft_atoi(char *str)
 {
@@ -39,15 +48,4 @@ int				ft_atoi(char *str)
 		j++;
 	}
 	return (i * neg);
-}
-
-static int		get_to_begining(char *str)
-{
-	int		j;
-
-	j = 0;
-	while ((str[j] == ' ' || str[j] == '\n' || str[j] == '\v' || str[j] == '\t'
-			|| str[j] == '\r' || str[j] == '\f' || str[j] == '+') && str[j])
-		j++;
-	return (j);
 }

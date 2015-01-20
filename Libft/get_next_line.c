@@ -6,14 +6,14 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/12/05 11:23:02 by afollin           #+#    #+#             */
-/*   Updated: 2013/12/19 14:34:29 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:05:41 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include		<unistd.h>
-#include		<string.h>
-#include		<stdlib.h>
-#include		"libft.h"
+#include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include "libft.h"
 
 static int		ft_read(char *buf, int fd, int ret)
 {
