@@ -432,6 +432,8 @@ char	**sortInAscii(char **oldTab, char **newTab, int count)
 
 	i = -1;
 	// while (oldTab && oldTab[++i])
+	if (oldTab == NULL)
+		return (NULL);
 	if (newTab == NULL)
 	{
 		newTab = (char **)malloc(sizeof(char *) * (count + 1));
@@ -683,8 +685,12 @@ int		main(int argc, char **argv)
 	options = getOptions(argc, argv, &index);
 	ft_putendl("Options recuperées :");
 	if (!options)
+	{
 		ft_putendl("No options, options == NULL");
-	else if (*options == '\0')
+		options = (char *)malloc(sizeof(char));
+		ft_bzero(options, 1);
+	}
+	if (*options == '\0')
 		ft_putendl("No options, array is empty");
 	else
 		ft_putendl(options);
@@ -702,15 +708,21 @@ ft_putendl("\n\n\n");
 	if (args == NULL)
 	{
 		ft_putendl("args == NULL");
+		args = (char **)malloc(sizeof(char *) * 2);
+		args[0] = (char *)malloc(sizeof(char) * 3);
+		args[1] = (char *)malloc(sizeof(char));
+		ft_bzero(args[0], 3);
+		ft_strcat(args[0], "./");
+		ft_bzero(args[1], 1);
+		argc = 1;
 	}
-	while (args != NULL && args[i]) // affichage des args recupérés // a modifier en while (i < argc - index)
+	while (args && i < argc - index) // affichage des args recupérés // a modifier en while (i < argc - index)
 	{
 		ft_putendl(args[i]);
 		++i;
 	} // TEST GETARGS()
-
 	args = sortInAscii(args, NULL, argc - index);
-	if (ft_strchr(options, 'r'))
+	if (options && !ft_strchr(options, 'r'))
 	{
 		// ft_putnbr(argc - index);
 		args = sortOptionLilR(args, NULL, argc - index);
