@@ -37,5 +37,5 @@ char	*ft_strstr(char *s1, char *s2)
 		}
 		i = i - j + 1;
 	}
-	return ('\0');
+	return (NULL);
 }

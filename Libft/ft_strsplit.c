@@ -38,7 +38,7 @@ static char		**ret_strsplit(char const *s, char c, char **str)
 		while (*s && *s == c)
 			s++;
 	}
-	str[i] = '\0';
+	str[i][0] = '\0';
 	return (str);
 }
 

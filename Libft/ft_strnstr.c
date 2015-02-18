@@ -35,9 +35,9 @@ char	*ft_strnstr(const char *s1, const char *s2, size_t n)
 			if (j == l)
 				return ((void *)&s1[i - j]);
 			if (j == n)
-				return ('\0');
+				return (NULL);
 		}
 		i = i - j + 1;
 	}
-	return ('\0');
+	return (NULL);
 }
