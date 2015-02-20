@@ -35,4 +35,6 @@ int		strInTabStr(char *str, char **tab, int sizeTab);
 char	*getBiggerStrInTab(char **tab, int count);
 char	**sortInAscii(char **oldTab, char **newTab, int count);
 
+char	*createStrSuffix(char *s1, char *s2);
+
 #endif

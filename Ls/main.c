@@ -53,7 +53,6 @@ char	**getElemstoDisplay(char *options, char *path, int *nbElem)// use dirent to
 
 char	**sortElems(char *options, char **elemToSort, char *path)
 {
-	char		**newTab0;
 	char		**newTab;
 	char		**newTab2;
 	int			count;
@@ -69,14 +68,12 @@ char	**sortElems(char *options, char **elemToSort, char *path)
 	while (elemToSort[count] && elemToSort[count][0])
 		++count;
 
-	// newTab0 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortinascii()
 	elemToSort = sortInAscii(elemToSort, NULL, count);
-
-	newTab = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans solt()
+	newTab = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortOptionLilT()
 	if (options && ft_strchr(options, 't'))
 		elemToSort = sortOptionLilT(elemToSort, newTab, path, count);
 
-	newTab2 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans solr()
+	newTab2 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortOptionLilR()
 	if (options && ft_strchr(options, 'r'))
 		elemToSort = sortOptionLilR(elemToSort, newTab2, count);
 
@@ -97,7 +94,7 @@ int		ft_isDir(char *entityPath)
 	return (0);
 }
 
-void	ft_ls(char *options, char **args, int ac)
+void	ft_ls(char *options, char **args, int ac, char *oldPath)
 {
 	struct stat		st;
 	int				totBlock;
@@ -106,14 +103,12 @@ void	ft_ls(char *options, char **args, int ac)
 	int				i;
 	int				nbElem;
 
-	if (args)
-		path = args[0];
-	else
-	{
-		path = (char *)malloc(sizeof(char) * 3);
-		ft_bzero(path, 3);
-		ft_strcat(path, "./");
-	}
+// START: met le prefixe 'path' a tous les args, ca sert pour -R
+	path = createStrSuffix(oldPath, args[0]);
+// END: met le prefixe 'path' a tous les args, ca sert pour -R
+
+
+
 
 	i = -1;
 	while (++i < ac)
@@ -127,12 +122,15 @@ void	ft_ls(char *options, char **args, int ac)
 			ft_putendl("It s not a dir");
 	}
 
+	if (ft_isDir(path))
 	totBlock = computeBlocks(path, options);
 
 
 //0 handle -a
-	elemsToShow = getElemstoDisplay(options, path, &nbElem);
-	elemsToShow = sortElems(options, elemsToShow, path);
+ft_putendl("Ca passe ici");
+	elemsToShow = getElemstoDisplay(options, path, &nbElem); // normalenent ya rien a changer pour gerer les fichiers
+ft_putendl("Ca ne passe pas ici");
+	elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers // createstrsuffix ne se fera pas ici, mais directement dans les check, comme ca ca affichera le bon name direct pas besoin d'enlever un suffix rajouté
 
 
 	if (ft_strchr(options, 'l'))
@@ -157,7 +155,7 @@ void	ft_ls(char *options, char **args, int ac)
 	if (--ac > 0)
 	{
 		ft_putstr("\n");
-		ft_ls(options, ++args, ac);
+		ft_ls(options, ++args, ac, path);
 	}
 
 	return ;
@@ -226,7 +224,7 @@ while (args && i < argc - index) // affichage des args recupérés
 	} // AFFICHAGE
 
 	ft_putendl("\n\n\n\n\n\n");
-	ft_ls(options, args, argc - index);
+	ft_ls(options, args, argc - index, "./");
 
 
 	return (0);
