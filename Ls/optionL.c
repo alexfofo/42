@@ -91,8 +91,18 @@ int		computeBlocks(char *path, char *options)
 
 void	optionLilL(char *path, char **elemsToShow, int totBlock, int nbElem)
 {
-	int		i;
+	struct stat		st;
+	int				i;
 
+	// if (stat(pathName, &st) == -1)
+	// {
+	// 	perror("stat in optionLilL");
+	// 	exit(EXIT_SUCCESS);
+	// 	if (!S_ISDIR(st.st_mode))
+	// 	{
+	// 		;
+	// 	}
+	// }
 	i = -1;
 	ft_putstr("total ");
 	ft_putnbr(totBlock);
@@ -104,3 +114,10 @@ void	optionLilL(char *path, char **elemsToShow, int totBlock, int nbElem)
 		printOptionL(path, elemsToShow[i]);
 	}
 }
+
+
+
+
+
+
+
