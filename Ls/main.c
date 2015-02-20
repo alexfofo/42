@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_ls.h"
 #include "libft.h"
 
 #include <stdlib.h>
@@ -26,189 +27,94 @@
 #include <grp.h>
 #include <pwd.h>
 
-void	ft_exit(char *msg, char *options, char *word)
-{
-	free(options);
-	ft_putstr(msg);
-	ft_putendl(word);
-	exit(0);
-	return ;
-}
 
-int		checkOption(char *options, char c, char *ref)
-{
-	int flag;
+// void	printLastModifTime(time_t mtime)
+// {
+// 	time_t		curTime;
+// 	struct tm	*timeinfo;
+// 	char		buffer[80];
 
-	flag = -1;
-	while (*ref) // le char ne fait pas parti des options supportées
-	{
-		if (c == *ref)
-			flag = 1;
-		++ref;
-	}
-	while (*options && flag > 0) // le char est deja dans options
-	{
-		if (c == *options)
-			flag = 0;
-		++options;
-	}
-	return (flag);
-}
+// 	time(&curTime);
+// 	timeinfo = localtime(&mtime);
+// 	if ((mtime + 15778463) < curTime || (mtime - 3600) > curTime)
+// 		strftime(buffer, 80, "%b %d %Y", timeinfo);
+// 	else
+// 		strftime(buffer, 80, "%b %d %H:%M", timeinfo);
+// 	ft_putstr(buffer);
+// 	return ;
+// }
 
-int		checkSpecialOptions(int *tmp, int *index, char *word)
-{
-	if (ft_strncmp(word, "-", ft_strlen(word)) == 0){
-		--(*index);
-		return (1);
-	}
-	if (ft_strncmp(word, "--", ft_strlen(word)) == 0){
-		*tmp = 0;
-		return (1);
-	}
-	return (0);
-}
+// void	printOptionL(char *path, char *name)
+// {
+// 	struct stat		sb;
+// 	char			*pathName;
 
-char	*getOptions(int argc, char **argv, int *index) // retourne un char* contenant les options passées and SET index
-{
-	char		*options;
-	int			opt;
-	int			j;
-	int			tmp;
-	int			breakFlag;
+// 	pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(name) + 1));
+// 	ft_bzero(pathName, ft_strlen(pathName));
+// 	ft_strcat(pathName, path);
+// 	ft_strcat(pathName, name);
+// 	if (stat(pathName, &sb) == -1)
+// 	{
+// 		perror("stat");
+// 		exit(EXIT_SUCCESS);
+// 	}
 
-	if ((opt = 0) == 0 && (breakFlag = 0) == 0 && argc == 1) // economise deux lignes d'INITIALISATION
-		return (NULL);
-	options = (char *)malloc(sizeof(char) * 6);
-	ft_bzero(options, 6);
-	while (++(*index) < argc && argv[(*index)][0] == '-' && breakFlag == 0)
-	{
-		j = 0;
-		while (argv[(*index)][++j])
-		{
-			if ((tmp = checkOption( options, argv[(*index)][j], "lRart\0" )) == 1)
-				options[opt++] = argv[(*index)][j];
-		}
-		if (checkSpecialOptions(&tmp, index, argv[(*index)]) == 1)
-			breakFlag = 1;
-		if (tmp == -1)
-			ft_exit("Problem, wrong option: ", options, argv[(*index)]);
-	}
-	return (options);
-}
+//     ft_putstr( (S_ISDIR(sb.st_mode)) ? "d" : "-");
+//     ft_putstr( (sb.st_mode & S_IRUSR) ? "r" : "-");
+//     ft_putstr( (sb.st_mode & S_IWUSR) ? "w" : "-");
+//     ft_putstr( (sb.st_mode & S_IXUSR) ? "x" : "-");
+//     ft_putstr( (sb.st_mode & S_IRGRP) ? "r" : "-");
+//     ft_putstr( (sb.st_mode & S_IWGRP) ? "w" : "-");
+//     ft_putstr( (sb.st_mode & S_IXGRP) ? "x" : "-");
+//     ft_putstr( (sb.st_mode & S_IROTH) ? "r" : "-");
+//     ft_putstr( (sb.st_mode & S_IWOTH) ? "w" : "-");
+//     ft_putstr( (sb.st_mode & S_IXOTH) ? "x" : "-");
+//     ft_putstr(" ");
+//     ft_putnbr(sb.st_nlink);
+//     ft_putstr("\t");
+//     ft_putstr((getpwuid(sb.st_uid))->pw_name);
+//     ft_putstr("  ");
+//     ft_putstr((getgrgid(sb.st_gid))->gr_name);
+//     ft_putstr("\t");
+//     ft_putnbr(sb.st_size);
+//     ft_putstr("\t");
+//     printLastModifTime(sb.st_mtime);
+// 	ft_putstr(" ");
+//     ft_putstr(name);
+//     ft_putstr("\n");
 
-char	**getArgs(int argc, char **argv, int firstArg)
-{
-	char	**args;
-	int		sub;
-	int		i;
+//     free(pathName);
+// 	return ;
+// }
 
-	if ((sub = argc - firstArg) == 0 || firstArg == 0)
-		return (NULL);
-	args = (char **)malloc(sizeof(char *) * (sub + 1));
-	i = -1;
-	while (++i + firstArg < argc)
-	{
-		args[i] = (char *)malloc(sizeof(char) * (ft_strlen(argv[i + firstArg]) + 1));
-		ft_strcpy(args[i], argv[i + firstArg]);
-	}
-	// args[i] = (char *)malloc(sizeof(char));//added wednesday morning
-	// args[i][0] = '\0';//added wed morning
-	if (args && !(*args))
-		return (NULL);
-	return (args);
-}
+// int		computeBlocks(char *path, char *options)
+// {
+// 	DIR				*directory;
+// 	struct dirent	*drnt;
+// 	struct stat		sa;
+// 	char			*pathName;
+// 	int				totBlock;
 
-void	printLastModifTime(time_t mtime)
-{
-	time_t		curTime;
-	struct tm	*timeinfo;
-	char		buffer[80];
-
-	time(&curTime);
-	timeinfo = localtime(&mtime);
-	if ((mtime + 15778463) < curTime || (mtime - 3600) > curTime)
-		strftime(buffer, 80, "%b %d %Y", timeinfo);
-	else
-		strftime(buffer, 80, "%b %d %H:%M", timeinfo);
-	ft_putstr(buffer);
-	return ;
-}
-
-void	testPrintOptionL(char *path, char *name)
-{
-	struct stat		sb;
-	char			*pathName;
-
-	pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(name) + 1));
-	ft_bzero(pathName, ft_strlen(pathName));
-	ft_strcat(pathName, path);
-	ft_strcat(pathName, name);
-	if (stat(pathName, &sb) == -1)
-	{
-		perror("stat");
-		exit(EXIT_SUCCESS);
-	}
-
-	// ft_putnbr(sb.st_blocks);//a additionner pour mettre dans le total
-	// ft_putstr("\t");
-
-    ft_putstr( (S_ISDIR(sb.st_mode)) ? "d" : "-");
-    ft_putstr( (sb.st_mode & S_IRUSR) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWUSR) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXUSR) ? "x" : "-");
-    ft_putstr( (sb.st_mode & S_IRGRP) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWGRP) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXGRP) ? "x" : "-");
-    ft_putstr( (sb.st_mode & S_IROTH) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWOTH) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXOTH) ? "x" : "-");
-    ft_putstr(" ");
-    ft_putnbr(sb.st_nlink);
-    ft_putstr("\t");
-    ft_putstr((getpwuid(sb.st_uid))->pw_name);
-    ft_putstr("  ");
-    ft_putstr((getgrgid(sb.st_gid))->gr_name);
-    ft_putstr("\t");
-    ft_putnbr(sb.st_size);
-    ft_putstr("\t");
-    // ft_putstr(ctime(&(sb.st_mtime)));
-    printLastModifTime(sb.st_mtime);
-	ft_putstr(" ");
-    ft_putstr(name);
-    ft_putstr("\n");
-
-    free(pathName);
-	return ;
-}
-
-int		computeBlocks(char *path, char *options)
-{
-	DIR				*directory;
-	struct dirent	*drnt;
-	struct stat		sa;
-	char			*pathName;
-	int				totBlock;
-
-	totBlock = 0;
-	directory = opendir(path);
-	while ((drnt = readdir(directory)) != NULL)
-	{
-		if (!ft_strchr(options, 'a') && drnt->d_name[0] == '.')
-			continue ;
-		pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(drnt->d_name) + 1));
-		ft_bzero(pathName, ft_strlen(pathName));
-		ft_strcat(pathName, path);
-		ft_strcat(pathName, drnt->d_name);
-		if (stat(pathName, &sa) == -1)
-		{
-			perror("stat in computeBlocks");
-			exit(EXIT_SUCCESS);
-		}
-		totBlock += sa.st_blocks;
-		free(pathName);
-	}
-	return totBlock;
-}
+// 	totBlock = 0;
+// 	directory = opendir(path);
+// 	while ((drnt = readdir(directory)) != NULL)
+// 	{
+// 		if (!ft_strchr(options, 'a') && drnt->d_name[0] == '.')
+// 			continue ;
+// 		pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(drnt->d_name) + 1));
+// 		ft_bzero(pathName, ft_strlen(pathName));
+// 		ft_strcat(pathName, path);
+// 		ft_strcat(pathName, drnt->d_name);
+// 		if (stat(pathName, &sa) == -1)
+// 		{
+// 			perror("stat in computeBlocks");
+// 			exit(EXIT_SUCCESS);
+// 		}
+// 		totBlock += sa.st_blocks;
+// 		free(pathName);
+// 	}
+// 	return totBlock;
+// }
 
 char	**extendTab(char **tab, char *name)
 {
@@ -217,49 +123,33 @@ char	**extendTab(char **tab, char *name)
 	char	**ret;
 
 	count = 0;
-	// ft_putendl("   		dexter");
 	if (tab == NULL)
 	{
-	// ft_putendl("   		rita");
 		ret = (char **)malloc(sizeof(char *) * 2);
 		ret[0] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
 		ft_bzero(ret[0], ft_strlen(name) + 1);
 		ft_strcat(ret[0], name);
 
-		ret[1] = (char *)malloc(sizeof(char));//lol
-		ft_bzero(ret[1], 1);//lol
-	// ft_putendl("   		hoyohyoyo");
+		ret[1] = (char *)malloc(sizeof(char));
+		ft_bzero(ret[1], 1);
 	}
 	else
 	{
-	// ft_putendl("   		belgique");
 		while (tab[count] && tab[count][0])
 		{
-			// ft_putstr("tab[count]:");
-			// ft_putendl(tab[count]);
 			++count;
 		}
-	// ft_putstr("   count = ");
-	// ft_putnbr(count);
-	// ft_putendl(" !");
 		ret = (char **)malloc(sizeof(char *) * (count + 2));//+2 pour name et potentiel \0 quil faut ajouter
 		count = -1;
-	// ft_putendl("   		allemagne");
 		while (tab[++count] && tab[count][0])
 		{
-	// ft_putendl("   			froid	ERR1");
-			// ft_putendl(tab[count]);
-	// ft_putendl("   			froid	ERR2");
 			i = 0;
 			while (tab[count][i])
 				++i;
 			ret[count] = (char *)malloc(sizeof(char) * (i + 1));
-	// ft_putendl("   			vodka");
 			ft_bzero(ret[count], i + 1);
 			ft_strcat(ret[count], tab[count]);
-	// ft_putendl("   			ice");
 		}
-	// ft_putendl("   		russia");
 		ret[count] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
 		ft_bzero(ret[count], ft_strlen(name) + 1);
 		ft_strcat(ret[count], name);
@@ -267,7 +157,6 @@ char	**extendTab(char **tab, char *name)
 		ret[count + 1] = (char *)malloc(sizeof(char));//lol
 		ft_bzero(ret[count + 1], 1);//lol
 	}
-	// ft_putendl("   		e=mc2");
 	//free tab
 	return ret;
 }
@@ -277,18 +166,15 @@ char	**sortOptionA(char *options, char *name, char **elemSorted, int *i)
 	int			toAdd;
 
 	toAdd = 0;
-	// ft_putendl("   Jean michel");
 	if (options && ft_strchr(options, 'a'))
 		toAdd = 1;
 	else if (name && name[0] != '.')
 		toAdd = 1;
-	// ft_putendl("   Jean chinois");
 	if (toAdd == 1)
 	{
 		elemSorted = extendTab(elemSorted, name);
 		*i = *i + 1;
 	}
-	// ft_putendl("   Jean phillipe");
 	return elemSorted;
 }
 
@@ -302,29 +188,17 @@ char	**getElemstoDisplay(char *options, char *path, int *nbElem)
 
 	elemSorted = NULL;
 	directory = opendir(path);
-	// ft_putendl("Mexico");
-	// ft_putstr(":");
-	// ft_putstr(path);
-	// ft_putendl(":");
 	i = 0;
 	while ((drnt = readdir(directory)) != NULL)
 	{
-	// ft_putendl("Bob");
 		pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(drnt->d_name) + 1));
-	// ft_putendl("A");
 		ft_bzero(pathName, ft_strlen(pathName));
-	// ft_putendl("b");
 		ft_strcat(pathName, path);
-	// ft_putendl("c");
 		ft_strcat(pathName, drnt->d_name);
-	// ft_putendl("d");
 		elemSorted = sortOptionA(options, drnt->d_name, elemSorted, &i);
-	// ft_putendl("e");
 		free(pathName);
-	// ft_putendl("carl");
 	}
 	*nbElem = i;
-	// ft_putendl("Rio");
 	return elemSorted;
 }
 
@@ -351,7 +225,7 @@ char	**sortOptionLilT(char **oldTab, char **newTab, char *path, int count)
 		tabInt[i] = s.st_mtime;
 		free(pathName);
 	}
-	//ci dessous: trouver le plus petit nbr dans tabint donc l'index n'est pas dans tabintbis
+	//ci dessous: trouver le plus petit nbr dans tabint dont l'index n'est pas dans tabintbis
 	j = -1;
 	while (++j < count)
 	{
@@ -369,16 +243,7 @@ char	**sortOptionLilT(char **oldTab, char **newTab, char *path, int count)
 		tabInt[tmpBis] = -1;
 		tabIntBis[j] = tmpBis;
 	}
-	// i = -1;
-		// ft_putendl(" START");
-	// while (++i < count)
-	// {
-	// 	ft_putnbr(tabIntBis[i]);
-	// 	ft_putstr("\n");
-	// }
-	// 	ft_putendl(" END");
 
-	// creer new tab a partir de old dans l'ordre des index de tabintBis
 	i = -1;
 	while (++i < count)
 	{
@@ -386,6 +251,8 @@ char	**sortOptionLilT(char **oldTab, char **newTab, char *path, int count)
 		ft_bzero(newTab[i], ft_strlen(oldTab[tabIntBis[i]]) + 1);
 		ft_strcat(newTab[i], oldTab[tabIntBis[i]]);
 	}
+	newTab[i] = (char *)malloc(sizeof(char));
+	ft_bzero(newTab[i], 1);
 	return newTab;
 }
 
@@ -393,17 +260,14 @@ int		strInTabStr(char *str, char **tab, int sizeTab)
 {
 	int		i;
 
-		// ft_putendl("	Well");
 	if (!tab || !(tab[0]))
 		return (-1);
 	i = -1;
-		// ft_putendl("	Hum");
 	while (++i < sizeTab)
 	{
 		if (ft_strcmp(tab[i], str) == 0)
 			return (1);
 	}
-		// ft_putendl("	Sure");
 	return (0);
 }
 
@@ -426,12 +290,11 @@ char	*getBiggerStrInTab(char **tab, int count)
 
 char	**sortInAscii(char **oldTab, char **newTab, int count)
 {
-	int				i;
-	int				j;
-	char			*small;
+	int				i;// il y a un probleme au niveau du sort ascci des args dans le main
+	int				j;// les args passés sont ./ ../ par exemple, du coup le tri foire
+	char			*small;// car il faudrait passer . et .. !!! a regler
 
 	i = -1;
-	// while (oldTab && oldTab[++i])
 	if (oldTab == NULL)
 		return (NULL);
 	if (newTab == NULL)
@@ -440,29 +303,22 @@ char	**sortInAscii(char **oldTab, char **newTab, int count)
 	}
 	while (++i < count)
 	{
-		// ft_putendl("isin");
 		small = getBiggerStrInTab(oldTab, count);
 		j = -1;
-		// ft_putendl("isin2");
 		while (++j < count)
 		{
-		// ft_putendl("isin@");
-		// ft_putnbr(j);
-		// ft_putstr("->j / count <-");
-		// ft_putnbr(count);
-		// ft_putstr("\n");
 			if ((strInTabStr(oldTab[j], newTab, i) <= 0)
 				&& ft_strcmp(oldTab[j], small) < 0)
 			{
 				small = oldTab[j];
 			}
-		// ft_putendl("isin#");
 		}
-		// ft_putendl("isout");
 		newTab[i] = (char *)malloc(sizeof(char) * (ft_strlen(small) + 1));
 		ft_bzero(newTab[i], ft_strlen(small) + 1);
 		ft_strcat(newTab[i], small);
 	}
+	newTab[i] = (char *)malloc(sizeof(char));
+	ft_bzero(newTab[i], 1);
 
 	return newTab;
 }
@@ -471,12 +327,8 @@ char	**sortOptionLilR(char **oldTab, char **newTab, int count)
 {
 	int				i;
 	int				j;
-	// int				count;
 	char			*small;
 
-	// count = 0;
-	// while (oldTab && oldTab[count])
-	// 	++count;
 	if (newTab == NULL)
 	{
 		newTab = (char **)malloc(sizeof(char *) * (count + 1));
@@ -489,9 +341,8 @@ char	**sortOptionLilR(char **oldTab, char **newTab, int count)
 		ft_bzero(newTab[j], ft_strlen(oldTab[count]) + 1);
 		ft_strcat(newTab[j], oldTab[count]);
 	}
-	newTab[j + 1] = (char *)malloc(sizeof(char));//lol
-	ft_bzero(newTab[j + 1], 1);//lol
-	// newTab[++j] = NULL;
+	newTab[j + 1] = (char *)malloc(sizeof(char));
+	ft_bzero(newTab[j + 1], 1);
 	return newTab;
 }
 
@@ -506,50 +357,19 @@ char	**sortElems(char *options, char **elemToSort, char *path)
 		
 
 	count = 0;
-	// ft_putendl("blaliloluuu  TEST elem ot sort");
 	while (elemToSort[count] && elemToSort[count][0])
 		++count;
-	// ft_putendl("le TEST elem ot sort");
 
-	newTab0 = (char **)malloc(sizeof(char *) * (count + 1));
+	newTab0 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortinascii()
 	elemToSort = sortInAscii(elemToSort, newTab0, count);
-	// ft_putendl("432 EST elem ot sort");
 
-	// ft_putendl("     Start before -t");
-	// while (++i < count)
-	// {
-	// 	ft_putendl(elemToSort[i]);
-	// }
-	// ft_putendl("     End before -t");
+	newTab = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans solt()
+	if (options && ft_strchr(options, 't'))
+		elemToSort = sortOptionLilT(elemToSort, newTab, path, count);
 
-
-
-
-		newTab = (char **)malloc(sizeof(char *) * (count + 1));
-		if (options && ft_strchr(options, 't'))
-			elemToSort = sortOptionLilT(elemToSort, newTab, path, count);
-
-	// ft_putendl("999  432 EST elem ot sort");
-	// i = -1;
-	// ft_putendl("     Start -t done");
-	// while (++i < count)
-	// {
-	// 	ft_putendl(elemToSort[i]);
-	// }
-	// ft_putendl("     End -t done");
-		newTab2 = (char **)malloc(sizeof(char *) * (count + 1));
-
-		if (options && ft_strchr(options, 'r'))
-			elemToSort = sortOptionLilR(elemToSort, newTab2, count);
-
-	// ft_putendl(" dtc 432 EST elem ot sort");
-	// i = -1;
-	// ft_putendl("     Start -r done");
-	// while (++i < count)
-	// {
-	// 	ft_putendl(elemToSort[i]);
-	// }
-	// ft_putendl("     End -r done");
+	newTab2 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans solr()
+	if (options && ft_strchr(options, 'r'))
+		elemToSort = sortOptionLilR(elemToSort, newTab2, count);
 
 	return elemToSort;
 }
@@ -557,7 +377,19 @@ char	**sortElems(char *options, char **elemToSort, char *path)
 
 
 
+int		ft_isDir(char *entityPath)
+{
+	struct stat		st;
 
+	if (stat(entityPath, &st) == -1)
+	{
+		perror("stat in ft_isDir");
+		exit(EXIT_SUCCESS);
+	}
+	if (S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}
 
 
 
@@ -566,6 +398,7 @@ void	ft_ls(char *options, char **args, int ac)
 {
 	DIR				*directory;
 	struct dirent	*drnt;
+	struct stat		st;
 	int				totBlock;
 	char			**elemsToShow;
 	char			*path;
@@ -573,7 +406,6 @@ void	ft_ls(char *options, char **args, int ac)
 	int				nbElem;
 
 //0 handle -a
-	// ft_putendl("Bogota");
 	if (args)
 		path = args[0];
 	else
@@ -582,19 +414,39 @@ void	ft_ls(char *options, char **args, int ac)
 		ft_bzero(path, 3);
 		ft_strcat(path, "./");
 	}
-	// ft_putstr("La capital des emirat arabe unis est 			:	");
-	// ft_putendl(path);
-	elemsToShow = getElemstoDisplay(options, path, &nbElem);
-	// int i = -1;
-	// while (elemsToShow && elemsToShow[++i])
-	// 	ft_putendl(elemsToShow[i]);
 
-//0.5 handle -rt
-	// ft_putendl("un truc du genre riga");
+	// handleFileInArgs (args, ac)
+	i = -1;
+	while (++i < ac)
+	{
+		if (stat(args[i], &st) == -1)
+		{
+			perror("stat in ft_isDir");
+			exit(EXIT_SUCCESS);
+		}
+		if (!ft_isDir(path))
+			ft_putendl("It s not a dir");
+	}
+	// //if path is a file, just display file
+	// if (!ft_isDir(path))
+	// {
+	// 	// elemsToShow = (char **)malloc(sizeof(char *) * 2);
+	// 	// ft_bzero(elemsToShow[0], ft_strlen(path + 1));
+	// 	// ft_bzero(elemsToShow[1], 1);
+	// 	// ft_strcat(elemsToShow[0], path);
+	// 	ft_putendl(path);
+	// 	if (--ac > 0)
+	// 	{
+	// 		ft_putstr("\n");
+	// 		ft_ls(options, ++args, ac);
+	// 	}
+	// 	return ;
+	// }
+	// else
+		elemsToShow = getElemstoDisplay(options, path, &nbElem);
 	elemsToShow = sortElems(options, elemsToShow, path);
-	// ft_putendl("	wrtluihgwleutriurewytlewuytkluwerytlkweutywkluetya");
 
-//1
+	totBlock = computeBlocks(path, options);
 
 	// if (args && *args)
 	// {
@@ -607,46 +459,10 @@ void	ft_ls(char *options, char **args, int ac)
 	// 	directory = opendir(".");
 	// 	ft_putendl(".:");
 	// }
-	
-	totBlock = computeBlocks(path, options);
-
-
-
-	// closedir(directory);
-
-//2
-
-	if (args && *args)
-	{
-		directory = opendir(args[0]);
-		ft_putstr(args[0]);
-		ft_putendl(":");
-	}
-	else
-	{
-		directory = opendir(".");
-		ft_putendl(".:");
-	}
-	
-
-//faire un premier passage comme la boucle cidessous pour sotcker et trier le contenu direct du dossier
-	// et en profiter pour calculer le 'total'
 
 	if (ft_strchr(options, 'l'))
 	{
-		ft_putstr("total ");
-		ft_putnbr(totBlock);
-		ft_putstr("\n");
-		// while ((drnt = readdir(directory)) != NULL)
-		// {
-		// 	testPrintOptionL(path, drnt->d_name);
-		// }
-
-		i = -1;
-		while (++i < nbElem)
-		{
-			testPrintOptionL(path, elemsToShow[i]);
-		}
+		optionLilL(path, elemsToShow, totBlock, nbElem);
 	}
 	else
 	{
@@ -655,16 +471,19 @@ void	ft_ls(char *options, char **args, int ac)
 			ft_putendl(elemsToShow[i]);
 	}
 
-		
-
-	closedir(directory);
+	// closedir(directory);
 
 	//cas particulier -R a faire here
+
+	// si il y a des sous dossier:
+	// 	alors tq on a pas parcouru ts les sous dosiers, ftls(options, X, Xc)
+	// 	avec X un char** des sous-dossiers direct , et Xc le nombre de sous-dossiers direct
+
+	// getAllDir();
 
 	if (--ac > 0)
 	{
 		ft_putstr("\n");
-	// ft_putendl("Dans ton cul");
 		ft_ls(options, ++args, ac);
 	}
 
@@ -678,12 +497,13 @@ int		main(int argc, char **argv)
 	char	*options;
 	int		index; // cet index est passé a getoptions() qui le set a l'index du premier argument
 	int 	i = 0;
+	char	*argsType;
 
 	index = 0;
 
 //getOptions
 	options = getOptions(argc, argv, &index);
-	ft_putendl("Options recuperées :");
+	ft_putstr("Options recuperées :   ");
 	if (!options)
 	{
 		ft_putendl("No options, options == NULL");
@@ -714,23 +534,20 @@ ft_putendl("\n\n\n");
 		ft_bzero(args[0], 3);
 		ft_strcat(args[0], "./");
 		ft_bzero(args[1], 1);
-		argc = 1;
+		++argc;
+		if (index == 0)
+			++index;
 	}
-	while (args && i < argc - index) // affichage des args recupérés // a modifier en while (i < argc - index)
+	while (args && i < argc - index) // affichage des args recupérés
 	{
 		ft_putendl(args[i]);
 		++i;
 	} // TEST GETARGS()
-	args = sortInAscii(args, NULL, argc - index);
+	args = sortInAscii(args, NULL, argc - index); // probleme ici, expliqué dans sortInAscii()
 	if (options && !ft_strchr(options, 'r'))
 	{
-		// ft_putnbr(argc - index);
 		args = sortOptionLilR(args, NULL, argc - index);
 	}
-
-	// i = -1;
-	// while (args[++i])
-		// ft_putendl(args[i]);
 
 	ft_putendl("\n\n\n\n\n\n");
 	ft_ls(options, args, argc - index);
