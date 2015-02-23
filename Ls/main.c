@@ -27,7 +27,7 @@
 #include <grp.h>
 #include <pwd.h>
 
-char	**getElemstoDisplay(char *options, char *path, int *nbElem)// use dirent to parcourir DIR et stocker ce qui doit l'etre (-a)
+char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to parcourir DIR et stocker ce qui doit l'etre (-a)
 {
 	char			**elemSorted;
 	DIR				*directory;
@@ -36,13 +36,24 @@ char	**getElemstoDisplay(char *options, char *path, int *nbElem)// use dirent to
 	int				i;
 
 	elemSorted = NULL;
-	directory = opendir(path);
+	directory = opendir(name);
+	if (directory == NULL)
+	{
+		*nbElem = 1;
+		elemSorted = (char **)malloc(sizeof(char *) * 2);
+		elemSorted[0] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
+		elemSorted[1] = (char *)malloc(sizeof(char));
+		ft_bzero(elemSorted[0], ft_strlen(name) + 1);
+		ft_strcat(elemSorted[0], name);
+		ft_bzero(elemSorted[1], 1);
+		return elemSorted;
+	}
 	i = 0;
 	while ((drnt = readdir(directory)) != NULL)
 	{
-		pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(drnt->d_name) + 1));
+		pathName = (char *)malloc(sizeof(char) * (ft_strlen(name) + ft_strlen(drnt->d_name) + 1));
 		ft_bzero(pathName, ft_strlen(pathName));
-		ft_strcat(pathName, path);
+		ft_strcat(pathName, name);
 		ft_strcat(pathName, drnt->d_name);
 		elemSorted = sortOptionA(options, drnt->d_name, elemSorted, &i);
 		free(pathName);
@@ -80,19 +91,20 @@ char	**sortElems(char *options, char **elemToSort, char *path)
 	return elemToSort;
 }
 
-int		ft_isDir(char *entityPath)
-{
-	struct stat		st;
+// int		ft_isDir(char *entityPath)
+// {
+// 	struct stat		st;
 
-	if (stat(entityPath, &st) == -1)
-	{
-		perror("stat in ft_isDir");
-		exit(EXIT_SUCCESS);
-	}
-	if (S_ISDIR(st.st_mode))
-		return (1);
-	return (0);
-}
+// ft_putendl(entityPath);
+// 	if (stat(entityPath, &st) == -1)
+// 	{
+// 		perror("stat in ft_isDir");
+// 		exit(EXIT_SUCCESS);
+// 	}
+// 	if (S_ISDIR(st.st_mode))
+// 		return (1);
+// 	return (0);
+// }
 
 void	ft_ls(char *options, char **args, int ac, char *oldPath)
 {
@@ -103,38 +115,56 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	int				i;
 	int				nbElem;
 
-// START: met le prefixe 'path' a tous les args, ca sert pour -R
+// START: met le prefixe 'path' a args[0], ca sert pour -R
 	path = createStrSuffix(oldPath, args[0]);
-// END: met le prefixe 'path' a tous les args, ca sert pour -R
+// END: met le prefixe 'path' a args[0], ca sert pour -R
 
 
 
 
-	i = -1;
-	while (++i < ac)
-	{
-		if (stat(args[i], &st) == -1)
+	// i = -1;
+	// while (++i < ac)
+	// {
+		if (stat(args[0], &st) == -1)
 		{
 			perror("stat in ft_isDir");
 			exit(EXIT_SUCCESS);
 		}
 		if (!ft_isDir(path))
 			ft_putendl("It s not a dir");
-	}
+		else
+		{
+			if (path[ft_strlen(path) - 1] != '/')
+				path = createStrSuffix(path, "/");
+		}
+	// }
 
 	if (ft_isDir(path))
 	totBlock = computeBlocks(path, options);
 
 
 //0 handle -a
-ft_putendl("Ca passe ici");
-	elemsToShow = getElemstoDisplay(options, path, &nbElem); // normalenent ya rien a changer pour gerer les fichiers
-ft_putendl("Ca ne passe pas ici");
-	elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers // createstrsuffix ne se fera pas ici, mais directement dans les check, comme ca ca affichera le bon name direct pas besoin d'enlever un suffix rajouté
-
+// ft_putendl("Ca passe ici");
+// ft_putstr("options: ");
+// ft_putendl(options);
+// ft_putstr("path: ");
+// ft_putendl(path);
+// ft_putstr("nbElem: ");
+// ft_putnbr(nbElem);
+	elemsToShow = getElemstoDisplay(options, args[0], &nbElem); // 
+	// ft_putendl("elemsToShow:");
+	// i = -1;
+	// while (++i < nbElem)
+	// {
+	// 	ft_putendl(elemsToShow[i]);
+	// }
+	// ft_putendl("	End of show elemtoshow");
+// ft_putendl("Ca ne passe pas ici");
+	elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers
 
 	if (ft_strchr(options, 'l'))
 	{
+		// ft_putendl("passe une fois");
 		optionLilL(path, elemsToShow, totBlock, nbElem);
 	}
 	else
@@ -155,7 +185,7 @@ ft_putendl("Ca ne passe pas ici");
 	if (--ac > 0)
 	{
 		ft_putstr("\n");
-		ft_ls(options, ++args, ac, path);
+		ft_ls(options, ++args, ac, oldPath);
 	}
 
 	return ;
@@ -215,12 +245,14 @@ ft_putendl("\n\n\n");
 	args = sortInAscii(args, NULL, argc - index);
 	if (options && ft_strchr(options, 'r'))
 		args = sortOptionLilR(args, NULL, argc - index);
+	
+
+	ft_putendl("affichage des elems apres tri");
 
 i = -1;
-while (args && i < argc - index) // affichage des args recupérés
+while (args && ++i < argc - index) // affichage des args recupérés
 	{
 		ft_putendl(args[i]);
-		++i;
 	} // AFFICHAGE
 
 	ft_putendl("\n\n\n\n\n\n");

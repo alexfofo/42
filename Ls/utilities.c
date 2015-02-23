@@ -12,3 +12,17 @@ char	*createStrSuffix(char *s1, char *s2)
 
 	return (ret);
 }
+
+int		ft_isDir(char *entityPath)
+{
+	struct stat		st;
+
+	if (stat(entityPath, &st) == -1)
+	{
+		perror("stat in ft_isDir");
+		exit(EXIT_SUCCESS);
+	}
+	if (S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}

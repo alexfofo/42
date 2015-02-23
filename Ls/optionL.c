@@ -20,15 +20,25 @@ void	printLastModifTime(time_t mtime)
 void	printOptionL(char *path, char *name)
 {
 	struct stat		sb;
-	char			*pathName;
+	// char			*pathName;
 
-	pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(name) + 1));
-	ft_bzero(pathName, ft_strlen(pathName));
-	ft_strcat(pathName, path);
-	ft_strcat(pathName, name);
-	if (stat(pathName, &sb) == -1)
+	if (ft_isDir(path))
 	{
-		perror("stat");
+		// pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(name) + 1));
+		// ft_bzero(pathName, ft_strlen(pathName));
+		// ft_strcat(pathName, path);
+		// ft_strcat(pathName, name);
+		path = createStrSuffix(path, name);
+	}
+	// ft_putstr("path: ");
+	// ft_putendl(path);
+	// ft_putstr("name: ");
+	// ft_putendl(name);
+	if (stat(path, &sb) == -1)
+	{
+		// ft_putstr("pathName: ");
+		// ft_putendl(path);
+		perror("stat in printOptionL");
 		exit(EXIT_SUCCESS);
 	}
 
@@ -56,7 +66,7 @@ void	printOptionL(char *path, char *name)
     ft_putstr(name);
     ft_putstr("\n");
 
-    free(pathName);
+    // free(pathName);
 	return ;
 }
 
