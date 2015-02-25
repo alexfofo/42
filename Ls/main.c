@@ -27,6 +27,9 @@
 #include <grp.h>
 #include <pwd.h>
 
+void	ft_ls(char *options, char **args, int ac, char *oldPath); // need for optionBigR
+
+
 char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to parcourir DIR et stocker ce qui doit l'etre (-a)
 {
 	char			**elemSorted;
@@ -91,20 +94,57 @@ char	**sortElems(char *options, char **elemToSort, char *path)
 	return elemToSort;
 }
 
-// int		ft_isDir(char *entityPath)
-// {
-// 	struct stat		st;
+void	optionBigR(char *path, char *options)
+{
+	DIR				*directory;
+	struct dirent	*drnt;
+	struct stat		st;
+	char			**tmp;
+	char			*tmpSuffix;
 
-// ft_putendl(entityPath);
-// 	if (stat(entityPath, &st) == -1)
-// 	{
-// 		perror("stat in ft_isDir");
-// 		exit(EXIT_SUCCESS);
-// 	}
-// 	if (S_ISDIR(st.st_mode))
-// 		return (1);
-// 	return (0);
-// }
+	directory = opendir(path);
+	if (directory == NULL)
+	{
+		ft_putendl("Pequeño problemo en la functina optionBigR");
+		ft_putendl("Dans ton boule batard");
+		exit(EXIT_SUCCESS);
+	}
+	while ((drnt = readdir(directory)) != NULL)
+	{
+		tmpSuffix = createStrSuffix(path, drnt->d_name);
+		if (stat(tmpSuffix, &st) == -1)
+		{
+			ft_putstr("	path = ");
+			ft_putendl(path);
+			ft_putstr("	tmpSuffix = ");
+			ft_putendl(tmpSuffix);
+			perror("stat in BigR");
+			exit(EXIT_SUCCESS);
+		}
+		if (ft_isDir(tmpSuffix) && ft_strcmp(drnt->d_name, ".") && ft_strcmp(drnt->d_name, ".."))
+		{
+			tmp = (char **)malloc(sizeof(char *) * 2);
+			tmp[0] = (char *)malloc(sizeof(char) * (ft_strlen(tmpSuffix) + 1));
+			ft_bzero(tmp[0], (ft_strlen(tmpSuffix) + 1));
+			ft_strcat(tmp[0], tmpSuffix);
+			tmp[1] = (char *)malloc(sizeof(char));
+			ft_bzero(tmp[1], 1);
+
+
+			// ft_putendl("On est bien passé dans bigR ma ptite gueule");
+			// ft_putstr("path = ");
+			// ft_putendl(path);
+			// ft_putstr("tmpSuffix = ");
+			// ft_putendl(tmpSuffix);
+			// ft_putstr("tmp[0] = ");
+			// ft_putendl(tmp[0]);
+			ft_putstr("\n");
+			ft_ls(options, tmp, 1, path); // soit ce ft_ls, soit celui de la ligne !@# mais dans ce dernier cas on com +6lignes
+			// ft_ls(options, &(drnt->d_name), 1, path); // ceci est la ligne !@#
+		}
+	}
+	return ;
+}
 
 void	ft_ls(char *options, char **args, int ac, char *oldPath)
 {
@@ -116,55 +156,36 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	int				nbElem;
 
 // START: met le prefixe 'path' a args[0], ca sert pour -R
-	path = createStrSuffix(oldPath, args[0]);
+	//path = createStrSuffix(oldPath, args[0]);
+	path = args[0]; // remplace la ligne du dessus qui est probablement inutile vu que je le fais dans optionBigR
 // END: met le prefixe 'path' a args[0], ca sert pour -R
 
-
-
-
-	// i = -1;
-	// while (++i < ac)
-	// {
-		if (stat(args[0], &st) == -1)
-		{
-			perror("stat in ft_isDir");
-			exit(EXIT_SUCCESS);
-		}
-		if (!ft_isDir(path))
-			ft_putendl("It s not a dir");
-		else
-		{
-			if (path[ft_strlen(path) - 1] != '/')
-				path = createStrSuffix(path, "/");
-		}
-	// }
+	if (stat(args[0], &st) == -1)
+	{
+		ft_putstr("On a args[0] = ");
+		ft_putendl(args[0]);
+		perror("stat in ft_ls");
+		exit(EXIT_SUCCESS);
+	}
+	if (!ft_isDir(path))
+		ft_putendl("It s not a dir");
+	else
+	{
+		if (path[ft_strlen(path) - 1] != '/')
+			path = createStrSuffix(path, "/");
+	}
 
 	if (ft_isDir(path))
 	totBlock = computeBlocks(path, options);
 
 
 //0 handle -a
-// ft_putendl("Ca passe ici");
-// ft_putstr("options: ");
-// ft_putendl(options);
-// ft_putstr("path: ");
-// ft_putendl(path);
-// ft_putstr("nbElem: ");
-// ft_putnbr(nbElem);
 	elemsToShow = getElemstoDisplay(options, args[0], &nbElem); // 
-	// ft_putendl("elemsToShow:");
-	// i = -1;
-	// while (++i < nbElem)
-	// {
-	// 	ft_putendl(elemsToShow[i]);
-	// }
-	// ft_putendl("	End of show elemtoshow");
-// ft_putendl("Ca ne passe pas ici");
+
 	elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers
 
 	if (ft_strchr(options, 'l'))
 	{
-		// ft_putendl("passe une fois");
 		optionLilL(path, elemsToShow, totBlock, nbElem);
 	}
 	else
@@ -180,7 +201,14 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	// 	alors tq on a pas parcouru ts les sous dosiers, ftls(options, X, Xc)
 	// 	avec X un char** des sous-dossiers direct , et Xc le nombre de sous-dossiers direct
 
+	if (ft_strchr(options, 'R') && ft_isDir(path))
+	{
+		optionBigR(path, options);
+	}
+
 	// getAllDir();
+
+
 
 	if (--ac > 0)
 	{
@@ -245,7 +273,7 @@ ft_putendl("\n\n\n");
 	args = sortInAscii(args, NULL, argc - index);
 	if (options && ft_strchr(options, 'r'))
 		args = sortOptionLilR(args, NULL, argc - index);
-	
+	// faire un sort supplementaire pour trier les fichiers dabord et dossier ensuite
 
 	ft_putendl("affichage des elems apres tri");
 
@@ -256,7 +284,7 @@ while (args && ++i < argc - index) // affichage des args recupérés
 	} // AFFICHAGE
 
 	ft_putendl("\n\n\n\n\n\n");
-	ft_ls(options, args, argc - index, "./");
+	ft_ls(options, args, argc - index, "\0");
 
 
 	return (0);

@@ -19,7 +19,8 @@ int		ft_isDir(char *entityPath)
 
 	if (stat(entityPath, &st) == -1)
 	{
-		perror("stat in ft_isDir");
+		ft_putendl(entityPath);
+		perror("stat in ft_isDir in utilities.c");
 		exit(EXIT_SUCCESS);
 	}
 	if (S_ISDIR(st.st_mode))
