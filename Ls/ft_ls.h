@@ -3,16 +3,16 @@
 
 # include <stdlib.h>
 
-#include <string.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-#include <grp.h>
-#include <pwd.h>
+# include <string.h>
+# include <dirent.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <time.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <errno.h>
+# include <grp.h>
+# include <pwd.h>
 
 void	ft_exit(char *msg, char *options, char *word);
 int		checkOption(char *options, char c, char *ref);
@@ -37,5 +37,11 @@ char	**sortInAscii(char **oldTab, char **newTab, int count);
 
 char	*createStrSuffix(char *s1, char *s2);
 int		ft_isDir(char *entityPath);
+
+void	optionBigR(char *path, char *options);
+
+char	**getElemstoDisplay(char *options, char *name, int *nbElem);
+char	**sortElems(char *options, char **elemToSort, char *path);
+void	ft_ls(char *options, char **args, int ac, char *oldPath);
 
 #endif
