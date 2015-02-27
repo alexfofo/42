@@ -20,6 +20,7 @@ void	printLastModifTime(time_t mtime)
 void	printOptionL(char *path, char *name)
 {
 	struct stat		sb;
+	char			buf[1024];
 	// char			*pathName;
 
 	if (ft_isDir(path))
@@ -34,15 +35,21 @@ void	printOptionL(char *path, char *name)
 	// ft_putendl(path);
 	// ft_putstr("name: ");
 	// ft_putendl(name);
-	if (stat(path, &sb) == -1)
+	if (lstat(path, &sb) == -1)
 	{
 		// ft_putstr("pathName: ");
 		// ft_putendl(path);
 		perror("stat in printOptionL");
+		return ;
 		exit(EXIT_SUCCESS);
 	}
 
-    ft_putstr( (S_ISDIR(sb.st_mode)) ? "d" : "-");
+    ft_putstr((S_ISDIR(sb.st_mode)) ? "d" : 
+    	(S_ISLNK(sb.st_mode) ? "l" :
+    	(S_ISSOCK(sb.st_mode) ? "s" :
+    	(S_ISBLK(sb.st_mode) ? "b" :
+    	(S_ISCHR(sb.st_mode) ? "c" :
+    	(S_ISFIFO(sb.st_mode) ? "p" : "-"))))));
     ft_putstr( (sb.st_mode & S_IRUSR) ? "r" : "-");
     ft_putstr( (sb.st_mode & S_IWUSR) ? "w" : "-");
     ft_putstr( (sb.st_mode & S_IXUSR) ? "x" : "-");
@@ -80,7 +87,7 @@ int		computeBlocks(char *path, char *options)
 
 	totBlock = 0;
 	directory = opendir(path);
-	while ((drnt = readdir(directory)) != NULL)
+	while (directory != NULL && (drnt = readdir(directory)) != NULL)
 	{
 		if (!ft_strchr(options, 'a') && drnt->d_name[0] == '.')
 			continue ;
@@ -88,31 +95,25 @@ int		computeBlocks(char *path, char *options)
 		ft_bzero(pathName, ft_strlen(pathName));
 		ft_strcat(pathName, path);
 		ft_strcat(pathName, drnt->d_name);
-		if (stat(pathName, &sa) == -1)
+		if (lstat(pathName, &sa) == -1)
 		{
+			ft_putstr("path: ");
+			ft_putendl(pathName);
 			perror("stat in computeBlocks");
 			exit(EXIT_SUCCESS);
 		}
 		totBlock += sa.st_blocks;
-		free(pathName);
+		//free(pathName);
 	}
+	if (directory)
+		closedir(directory);
 	return totBlock;
 }
 
 void	optionLilL(char *path, char **elemsToShow, int totBlock, int nbElem)
 {
-	struct stat		st;
 	int				i;
 
-	// if (stat(pathName, &st) == -1)
-	// {
-	// 	perror("stat in optionLilL");
-	// 	exit(EXIT_SUCCESS);
-	// 	if (!S_ISDIR(st.st_mode))
-	// 	{
-	// 		;
-	// 	}
-	// }
 	i = -1;
 	ft_putstr("total ");
 	ft_putnbr(totBlock);

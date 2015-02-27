@@ -28,7 +28,7 @@ void	optionLilL(char *path, char **elemsToShow, int totBlock, int nbElem);
 char	**extendTab(char **tab, char *name);
 char	**sortOptionA(char *options, char *name, char **elemSorted, int *i);
 
-char	**sortOptionLilT(char **oldTab, char **newTab, char *path, int count);
+char	**sortOptionLilT(char **oldTab, char *path, int count);
 char	**sortOptionLilR(char **oldTab, char **newTab, int count);
 
 int		strInTabStr(char *str, char **tab, int sizeTab);

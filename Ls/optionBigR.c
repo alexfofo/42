@@ -16,12 +16,14 @@ void	optionBigR(char *path, char *options)
 		ft_putendl(path);
 		ft_putendl("Pequeño problemo en la functina optionBigR");
 		ft_putendl("Dans ton boule batard");
+		perror("el problemo ");
+		return ;
 		exit(EXIT_SUCCESS);
 	}
 	while ((drnt = readdir(directory)) != NULL)
 	{
 		tmpSuffix = createStrSuffix(path, drnt->d_name);
-		if (stat(tmpSuffix, &st) == -1)
+		if (lstat(tmpSuffix, &st) == -1)
 		{
 			ft_putstr("	path = ");
 			ft_putendl(path);
@@ -40,17 +42,11 @@ void	optionBigR(char *path, char *options)
 			ft_bzero(tmp[1], 1);
 
 
-			// ft_putendl("On est bien passé dans bigR ma ptite gueule");
-			// ft_putstr("path = ");
-			// ft_putendl(path);
-			// ft_putstr("tmpSuffix = ");
-			// ft_putendl(tmpSuffix);
-			// ft_putstr("tmp[0] = ");
-			// ft_putendl(tmp[0]);
 			ft_putstr("\n");
+
 			ft_ls(options, tmp, 1, path); // soit ce ft_ls, soit celui de la ligne !@# mais dans ce dernier cas on com +6lignes
-			// ft_ls(options, &(drnt->d_name), 1, path); // ceci est la ligne !@#
 		}
 	}
+	closedir(directory);
 	return ;
 }

@@ -52,7 +52,7 @@ char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to
 		ft_bzero(elemSorted[1], 1);
 		return elemSorted;
 	}
-// ft_putendl("	Directory n'es tpas NULL");
+// ft_putendl("	Directory n'est pas NULL");
 	i = 0;
 	while ((drnt = readdir(directory)) != NULL)
 	{
@@ -62,92 +62,36 @@ char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to
 		ft_strcat(pathName, name);
 		ft_strcat(pathName, drnt->d_name);
 		elemSorted = sortOptionA(options, drnt->d_name, elemSorted, &i);
-		free(pathName);
+		//free(pathName);
 	}
 	*nbElem = i;
+	closedir(directory);
 	return elemSorted;
 }
 
 char	**sortElems(char *options, char **elemToSort, char *path)
 {
-	char		**newTab;
-	char		**newTab2;
 	int			count;
 
 	int i = -1;
-		
-	// ce qu il faudrait faire
-	// c'est concat path avec tous les elemtosort
-	// comme ca pas besoin de trimballer le path !
-	// easy
-
 	count = 0;
+// ft_putendl("	THERE");
 	while (elemToSort[count] && elemToSort[count][0])
 		++count;
 
+// ft_putendl("	THERE");
 	elemToSort = sortInAscii(elemToSort, NULL, count);
-	newTab = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortOptionLilT()
+// ft_putendl("	THERE");
 	if (options && ft_strchr(options, 't'))
-		elemToSort = sortOptionLilT(elemToSort, newTab, path, count);
+		elemToSort = sortOptionLilT(elemToSort, path, count);
 
-	newTab2 = (char **)malloc(sizeof(char *) * (count + 1));// a mettre dans sortOptionLilR()
+// ft_putendl("	THERE");
 	if (options && ft_strchr(options, 'r'))
-		elemToSort = sortOptionLilR(elemToSort, newTab2, count);
+		elemToSort = sortOptionLilR(elemToSort, NULL, count);
+// ft_putendl("	THERE");
 
 	return elemToSort;
 }
-
-// void	optionBigR(char *path, char *options)
-// {
-// 	DIR				*directory;
-// 	struct dirent	*drnt;
-// 	struct stat		st;
-// 	char			**tmp;
-// 	char			*tmpSuffix;
-
-// 	directory = opendir(path);
-// 	if (directory == NULL)
-// 	{
-// 		ft_putendl("Pequeño problemo en la functina optionBigR");
-// 		ft_putendl("Dans ton boule batard");
-// 		exit(EXIT_SUCCESS);
-// 	}
-// 	while ((drnt = readdir(directory)) != NULL)
-// 	{
-// 		tmpSuffix = createStrSuffix(path, drnt->d_name);
-// 		if (stat(tmpSuffix, &st) == -1)
-// 		{
-// 			ft_putstr("	path = ");
-// 			ft_putendl(path);
-// 			ft_putstr("	tmpSuffix = ");
-// 			ft_putendl(tmpSuffix);
-// 			perror("stat in BigR");
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 		if (ft_isDir(tmpSuffix) && ft_strcmp(drnt->d_name, ".") && ft_strcmp(drnt->d_name, ".."))
-// 		{
-// 			tmp = (char **)malloc(sizeof(char *) * 2);
-// 			tmp[0] = (char *)malloc(sizeof(char) * (ft_strlen(tmpSuffix) + 1));
-// 			ft_bzero(tmp[0], (ft_strlen(tmpSuffix) + 1));
-// 			ft_strcat(tmp[0], tmpSuffix);
-// 			tmp[1] = (char *)malloc(sizeof(char));
-// 			ft_bzero(tmp[1], 1);
-
-
-// 			// ft_putendl("On est bien passé dans bigR ma ptite gueule");
-// 			// ft_putstr("path = ");
-// 			// ft_putendl(path);
-// 			// ft_putstr("tmpSuffix = ");
-// 			// ft_putendl(tmpSuffix);
-// 			// ft_putstr("tmp[0] = ");
-// 			// ft_putendl(tmp[0]);
-// 			ft_putstr("\n");
-// 			ft_ls(options, tmp, 1, path); // soit ce ft_ls, soit celui de la ligne !@# mais dans ce dernier cas on com +6lignes
-// 			// ft_ls(options, &(drnt->d_name), 1, path); // ceci est la ligne !@#
-// 		}
-// 	}
-// 	return ;
-// }
 
 void	ft_ls(char *options, char **args, int ac, char *oldPath)
 {
@@ -158,13 +102,11 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	int				i;
 	int				nbElem;
 
-// START: met le prefixe 'path' a args[0], ca sert pour -R
-	//path = createStrSuffix(oldPath, args[0]);
-	path = args[0]; // remplace la ligne du dessus qui est probablement inutile vu que je le fais dans optionBigR
-// END: met le prefixe 'path' a args[0], ca sert pour -R
-// ft_putstr("test de args[0: ");
-// ft_putendl(args[0]);
-	if (stat(args[0], &st) == -1)
+// ft_putendl("In ftls");
+	path = args[0];
+
+	nbElem = 0;
+	if (lstat(args[0], &st) == -1)
 	{
 		ft_putstr("On a args[0] = ");
 		ft_putendl(args[0]);
@@ -199,27 +141,23 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 // ft_putendl(elemsToShow[0]);
 	if (nbElem > 0)
 	{
+// ft_putendl("THERE");
 		elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers
 	// ft_putendl("BLABLA4");
 
+// ft_putendl("THERE");
+		ft_putstr(path);
+		ft_putendl(":");
 		if (ft_strchr(options, 'l'))
 		{
 			optionLilL(path, elemsToShow, totBlock, nbElem);
 		}
 		else
 		{
-			ft_putstr(path);
-			ft_putendl(":");
 			i = -1;
 			while (elemsToShow && elemsToShow[++i] && elemsToShow[i][0])
 				ft_putendl(elemsToShow[i]);
 		}
-
-		//cas particulier -R a faire here
-
-		// si il y a des sous dossier:
-		// 	alors tq on a pas parcouru ts les sous dosiers, ftls(options, X, Xc)
-		// 	avec X un char** des sous-dossiers direct , et Xc le nombre de sous-dossiers direct
 
 		if (ft_strchr(options, 'R') && ft_isDir(path))
 		{
@@ -250,37 +188,22 @@ int		main(int argc, char **argv)
 	char	*options;
 	int		index; // cet index est passé a getoptions() qui le set a l'index du premier argument
 	int 	i = 0;
-	// char	*argsType;
+	char	**args;
 
 	index = 0;
 
 //getOptions
 	options = getOptions(argc, argv, &index);
 	ft_putstr("Options recuperées :   ");
-	if (!options)
-	{
-		ft_putendl("No options, options == NULL");
-		options = (char *)malloc(sizeof(char));
-		ft_bzero(options, 1);
-	}
 	if (*options == '\0')
 		ft_putendl("No options, array is empty");
 	else
 		ft_putendl(options);
-	// free(options);
-
-	ft_putstr("\nindex auquel commencent les args : ");
-	ft_putnbr(index); // TEST DE GETOPTIONS()
 
 //getArgs
-ft_putendl("\n\n\n");
-	ft_putendl(".  ## TEST GET_ARGS ##  .");
-	char	**args;
-
 	args = getArgs(argc, argv, index);
 	if (args == NULL)
 	{
-		ft_putendl("args == NULL");
 		args = (char **)malloc(sizeof(char *) * 2);
 		args[0] = (char *)malloc(sizeof(char) * 3);
 		args[1] = (char *)malloc(sizeof(char));
@@ -291,27 +214,17 @@ ft_putendl("\n\n\n");
 		if (index == 0)
 			++index;
 	}
-	while (args && i < argc - index) // affichage des args recupérés
-	{
-		ft_putendl(args[i]);
-		++i;
-	} // TEST GETARGS()
+
+//tri	
 	args = sortInAscii(args, NULL, argc - index);
 	if (options && ft_strchr(options, 'r'))
 		args = sortOptionLilR(args, NULL, argc - index);
 	// faire un sort supplementaire pour trier les fichiers dabord et dossier ensuite
 
-	ft_putendl("affichage des elems apres tri");
 
-i = -1;
-while (args && ++i < argc - index) // affichage des args recupérés
-	{
-		ft_putendl(args[i]);
-	} // AFFICHAGE
-
+//ls
 	ft_putendl("\n\n\n\n\n\n");
 	ft_ls(options, args, argc - index, "\0");
-
 
 	return (0);
 }

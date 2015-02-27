@@ -17,13 +17,19 @@ int		ft_isDir(char *entityPath)
 {
 	struct stat		st;
 
-	if (stat(entityPath, &st) == -1)
+// ft_putendl("is in ftisdir");
+	if (lstat(entityPath, &st) == -1)
 	{
 		ft_putendl(entityPath);
 		perror("stat in ft_isDir in utilities.c");
 		exit(EXIT_SUCCESS);
 	}
+// ft_putendl("ret1?");
 	if (S_ISDIR(st.st_mode))
+	{
+		// ft_putendl("LA");
 		return (1);
+	}
+// ft_putendl("ret0");
 	return (0);
 }

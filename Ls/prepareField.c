@@ -3,7 +3,9 @@
 
 void	ft_exit(char *msg, char *options, char *word)
 {
-	free(options);
+	//free(options);
+	if (!options)
+		exit(1);
 	ft_putstr(msg);
 	ft_putendl(word);
 	exit(0);
@@ -51,10 +53,10 @@ char	*getOptions(int argc, char **argv, int *index) // retourne un char* contena
 	int			tmp;
 	int			breakFlag;
 
-	if ((opt = 0) == 0 && (breakFlag = 0) == 0 && argc == 1) // economise deux lignes d'INITIALISATION
-		return (NULL);
 	options = (char *)malloc(sizeof(char) * 6);
 	ft_bzero(options, 6);
+	if ((opt = 0) == 0 && (breakFlag = 0) == 0 && argc == 1) // economise deux lignes d'INITIALISATION
+		return (options); // ici option est full of \0
 	while (++(*index) < argc && argv[(*index)][0] == '-' && breakFlag == 0)
 	{
 		j = 0;
