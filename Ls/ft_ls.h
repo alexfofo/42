@@ -37,11 +37,13 @@ char	**sortInAscii(char **oldTab, char **newTab, int count);
 
 char	*createStrSuffix(char *s1, char *s2);
 int		ft_isDir(char *entityPath);
+char	*duplicateStr(char *str);
 
 void	optionBigR(char *path, char *options);
 
 char	**getElemstoDisplay(char *options, char *name, int *nbElem);
 char	**sortElems(char *options, char **elemToSort, char *path);
 void	ft_ls(char *options, char **args, int ac, char *oldPath);
+char	**sortFilesAndDir(char **args, int nbArgs);
 
 #endif

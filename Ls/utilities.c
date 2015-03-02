@@ -33,3 +33,40 @@ int		ft_isDir(char *entityPath)
 // ft_putendl("ret0");
 	return (0);
 }
+
+char	*duplicateStr(char *str)
+{
+	char	*dup;
+	int		strSize;
+	int		size;
+
+	strSize = ft_strlen(str);
+	size =  strSize + 1;
+	dup = (char *)malloc(sizeof(char) * size);
+	ft_bzero(dup, size);
+	if (strSize > 0)
+		ft_strcat(dup, str);
+	return dup;
+}
+
+char	**extendTabStr(char **tab, char *str)
+{
+	char	**extended;
+	int		sizeTab;
+	int		count;
+
+	sizeTab = -1;
+	count = -1;
+	if (tab == NULL || tab[0] == NULL)
+	{
+		extended = (char **)malloc(sizeof(char *) * 2);
+		extended[0] = duplicateStr(str);
+		extended[1] = duplicateStr("\0");
+		return (extended);
+	}
+	while (tab[++sizeTab][0] != '\0')
+		;
+	while (++count < sizeTab)
+	{}
+	return (extended);
+}

@@ -1,6 +1,8 @@
 #include "libft.h"
 #include "ft_ls.h"
 
+#include <unistd.h>
+
 void	printLastModifTime(time_t mtime)
 {
 	time_t		curTime;
@@ -21,24 +23,12 @@ void	printOptionL(char *path, char *name)
 {
 	struct stat		sb;
 	char			buf[1024];
-	// char			*pathName;
+	ssize_t			len;
 
 	if (ft_isDir(path))
-	{
-		// pathName = (char *)malloc(sizeof(char) * (ft_strlen(path) + ft_strlen(name) + 1));
-		// ft_bzero(pathName, ft_strlen(pathName));
-		// ft_strcat(pathName, path);
-		// ft_strcat(pathName, name);
 		path = createStrSuffix(path, name);
-	}
-	// ft_putstr("path: ");
-	// ft_putendl(path);
-	// ft_putstr("name: ");
-	// ft_putendl(name);
 	if (lstat(path, &sb) == -1)
 	{
-		// ft_putstr("pathName: ");
-		// ft_putendl(path);
 		perror("stat in printOptionL");
 		return ;
 		exit(EXIT_SUCCESS);
@@ -50,15 +40,15 @@ void	printOptionL(char *path, char *name)
     	(S_ISBLK(sb.st_mode) ? "b" :
     	(S_ISCHR(sb.st_mode) ? "c" :
     	(S_ISFIFO(sb.st_mode) ? "p" : "-"))))));
-    ft_putstr( (sb.st_mode & S_IRUSR) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWUSR) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXUSR) ? "x" : "-");
-    ft_putstr( (sb.st_mode & S_IRGRP) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWGRP) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXGRP) ? "x" : "-");
-    ft_putstr( (sb.st_mode & S_IROTH) ? "r" : "-");
-    ft_putstr( (sb.st_mode & S_IWOTH) ? "w" : "-");
-    ft_putstr( (sb.st_mode & S_IXOTH) ? "x" : "-");
+    ft_putstr((sb.st_mode & S_IRUSR) ? "r" : "-");
+    ft_putstr((sb.st_mode & S_IWUSR) ? "w" : "-");
+    ft_putstr((sb.st_mode & S_IXUSR) ? "x" : "-");
+    ft_putstr((sb.st_mode & S_IRGRP) ? "r" : "-");
+    ft_putstr((sb.st_mode & S_IWGRP) ? "w" : "-");
+    ft_putstr((sb.st_mode & S_IXGRP) ? "x" : "-");
+    ft_putstr((sb.st_mode & S_IROTH) ? "r" : "-");
+    ft_putstr((sb.st_mode & S_IWOTH) ? "w" : "-");
+    ft_putstr((sb.st_mode & S_IXOTH) ? "x" : "-");
     ft_putstr(" ");
     ft_putnbr(sb.st_nlink);
     ft_putstr("\t");
@@ -69,8 +59,23 @@ void	printOptionL(char *path, char *name)
     ft_putnbr(sb.st_size);
     ft_putstr("\t");
     printLastModifTime(sb.st_mtime);
-	ft_putstr(" ");
+	ft_putstr("\t");
     ft_putstr(name);
+    if (S_ISLNK(sb.st_mode))
+    {
+		len = readlink(path, buf, sizeof(buf) - 1);
+		 
+		if (len != -1)
+		{
+		  buf[len] = '\0';
+		  ft_putstr(" -> ");
+		  ft_putstr(buf);
+		}
+		else
+		{
+			ft_putstr("Error in -> symbolic link stuff");
+		}
+    }
     ft_putstr("\n");
 
     // free(pathName);

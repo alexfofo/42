@@ -50,6 +50,7 @@ char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to
 		ft_bzero(elemSorted[0], ft_strlen(name) + 1);
 		ft_strcat(elemSorted[0], name);
 		ft_bzero(elemSorted[1], 1);
+		closedir(directory);//a voir si ceci ne fait pas bugg le tout, mais en vrai je comprend pas pourquoi ca bug pas sans ca
 		return elemSorted;
 	}
 // ft_putendl("	Directory n'est pas NULL");
@@ -102,7 +103,6 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	int				i;
 	int				nbElem;
 
-// ft_putendl("In ftls");
 	path = args[0];
 
 	nbElem = 0;
@@ -113,8 +113,6 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 		perror("stat in ft_ls");
 		exit(EXIT_SUCCESS);
 	}
-// ft_putstr("test de path: ");
-// ft_putendl(path);
 	if (!ft_isDir(path))
 		ft_putendl("It s not a dir");
 	else
@@ -122,30 +120,16 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 		if (path[ft_strlen(path) - 1] != '/')
 			path = createStrSuffix(path, "/");
 	}
-// ft_putendl("BLABLA");
 	if (ft_isDir(path))
 	totBlock = computeBlocks(path, options);
 
-// ft_putendl("BLABLA2");
 
 //0 handle -a
-	elemsToShow = getElemstoDisplay(options, args[0], &nbElem); // 
-// ft_putendl("BLABLA3");
-// ft_putstr("test de options: ");
-// ft_putendl(options);
-// ft_putstr("test de path: ");
-// ft_putendl(path);
-// ft_putstr("test de nbElem: ");
-// ft_putnbr(nbElem);
-// ft_putstr("\ntest de *elemsToShow: ");
-// ft_putendl(elemsToShow[0]);
+	elemsToShow = getElemstoDisplay(options, args[0], &nbElem);
 	if (nbElem > 0)
 	{
-// ft_putendl("THERE");
-		elemsToShow = sortElems(options, elemsToShow, path); // doit mettre les fichies en premiers, puis les dossiers
-	// ft_putendl("BLABLA4");
+		elemsToShow = sortElems(options, elemsToShow, path);
 
-// ft_putendl("THERE");
 		ft_putstr(path);
 		ft_putendl(":");
 		if (ft_strchr(options, 'l'))
@@ -183,6 +167,43 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	return ;
 }
 
+char	**sortFilesAndDir(char **args, int nbArgs)
+{
+	char	**newArgs;
+	int		count;
+	int		index;
+
+	count = -1;
+	index = -1;
+	newArgs = (char **)malloc(sizeof(char *) * (nbArgs + 1));
+	ft_putendl("je rentre ici");
+	while (++count < nbArgs)
+	{
+	ft_putendl("	je rentre ici");
+		if (!ft_isDir(args[count]))
+		{
+			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
+			// ft_bzero(newArgs[index], ft_strlen(args[count]) + 1);
+			// ft_strcat(newArgs[index], args[count]);
+			newArgs[++index] = duplicateStr(args[count]);
+		}
+	}
+	count = -1;
+	while (++count < nbArgs)
+	{
+	ft_putendl("		je rentre ici");
+		if (ft_isDir(args[count]))
+		{
+			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
+			// ft_bzero(newArgs[index], ft_strlen(args[count]) + 1);
+			// ft_strcat(newArgs[index], args[count]);
+			newArgs[++index] = duplicateStr(args[count]);
+		}
+	}
+	newArgs[++index] = duplicateStr("\0");
+	return (newArgs);
+}
+
 int		main(int argc, char **argv)
 {
 	char	*options;
@@ -216,10 +237,15 @@ int		main(int argc, char **argv)
 	}
 
 //tri	
-	args = sortInAscii(args, NULL, argc - index);
-	if (options && ft_strchr(options, 'r'))
-		args = sortOptionLilR(args, NULL, argc - index);
-	// faire un sort supplementaire pour trier les fichiers dabord et dossier ensuite
+	ft_putstr("argc - INDEX VAUT :");
+	ft_putnbr(argc - index);
+	if (argc - index > 1)
+	{
+		args = sortInAscii(args, NULL, argc - index);
+		if (options && ft_strchr(options, 'r'))
+			args = sortOptionLilR(args, NULL, argc - index);
+		args = sortFilesAndDir(args, argc - index); // faire un sort supplementaire pour trier les fichiers dabord et dossier ensuite
+	}
 
 
 //ls

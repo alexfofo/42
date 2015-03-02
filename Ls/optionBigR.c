@@ -34,17 +34,22 @@ void	optionBigR(char *path, char *options)
 		}
 		if (ft_isDir(tmpSuffix) && ft_strcmp(drnt->d_name, ".") && ft_strcmp(drnt->d_name, ".."))
 		{
-			tmp = (char **)malloc(sizeof(char *) * 2);
-			tmp[0] = (char *)malloc(sizeof(char) * (ft_strlen(tmpSuffix) + 1));
-			ft_bzero(tmp[0], (ft_strlen(tmpSuffix) + 1));
-			ft_strcat(tmp[0], tmpSuffix);
-			tmp[1] = (char *)malloc(sizeof(char));
-			ft_bzero(tmp[1], 1);
+			// tmp = (char **)malloc(sizeof(char *) * 2);
+			// tmp[0] = duplicateStr(tmpSuffix);
+			// tmp[1] = duplicateStr("\0");
+
+			tmp = extendTabStr(tmp, tmpSuffix);
+
+			// tmp[0] = (char *)malloc(sizeof(char) * (ft_strlen(tmpSuffix) + 1));
+			// ft_bzero(tmp[0], (ft_strlen(tmpSuffix) + 1));
+			// ft_strcat(tmp[0], tmpSuffix);
+			// tmp[1] = (char *)malloc(sizeof(char));
+			// ft_bzero(tmp[1], 1);
 
 
-			ft_putstr("\n");
-
-			ft_ls(options, tmp, 1, path); // soit ce ft_ls, soit celui de la ligne !@# mais dans ce dernier cas on com +6lignes
+			// ft_putstr("\n");
+// dabord creer un tab, le trier et ensuite le lire
+			// ft_ls(options, tmp, 1, path);
 		}
 	}
 	closedir(directory);
