@@ -66,7 +66,34 @@ char	**extendTabStr(char **tab, char *str)
 	}
 	while (tab[++sizeTab][0] != '\0')
 		;
+	extended = (char **)malloc(sizeof(char *) * (sizeTab + 2));
 	while (++count < sizeTab)
-	{}
+	{
+		extended[count] = duplicateStr(tab[count]);
+		free(tab[count]);
+	}
+	extended[count] = duplicateStr(str);
+	extended[++count] = duplicateStr("\0");
+	free(tab);
 	return (extended);
 }
+
+void	printTabStr(char **tab)
+{
+	int		i;
+
+	ft_putstr("	in printTabStr\n");
+	i = -1;
+	while (tab[++i][0])
+	{
+		ft_putstr("		tab[");
+		ft_putnbr(i);
+		ft_putstr("] : ");
+		ft_putendl(tab[i]);
+	}
+	ft_putstr("	out printTabStr\n");
+	return ;
+}
+
+
+

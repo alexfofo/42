@@ -13,22 +13,28 @@ char	**sortOptionLilT(char **oldTab, char *path, int count)
 	int				tmp;
 	int				tmpBis;
 
-ft_putendl("		THERE");
 	// if (newTab == NULL)
+	// ft_putendl("rentre dans -t");
 	newTab = (char **)malloc(sizeof(char *) * (count + 1));
-ft_putendl("		THERE");
 	i = -1;
 	while (++i < count)
 	{
 		pathName = (char *)malloc(sizeof(char) * (ft_strlen(oldTab[i]) + 1));
 		ft_bzero(pathName, ft_strlen(oldTab[i]) + 1);
-		ft_strcat(pathName, path);
+	// if(path)
+	// 	path = NULL;
+		if (path)
+			ft_strcat(pathName, path);
 		ft_strcat(pathName, oldTab[i]);
-		lstat(pathName, &s);//checker le retour bordeeeel
+		lstat(pathName, &s);//checker le retour bordeeeel... ou pas
+		// if (lstat(pathName, &s) == -1)
+		// {
+		// 	perror("stat in sortOptionLilT");
+		// 	exit(EXIT_SUCCESS);
+		// }
 		tabInt[i] = s.st_mtime;
 		//free(pathName);
 	}
-ft_putendl("		THERE");
 	//ci dessous: trouver le plus petit nbr dans tabint dont l'index n'est pas dans tabintbis
 	j = -1;
 	while (++j < count)
@@ -48,25 +54,13 @@ ft_putendl("		THERE");
 		tabIntBis[j] = tmpBis;
 	}
 
-ft_putendl("		ToHERE");
 	i = -1;
-	ft_putnbr(count);
-	ft_putendl(" -> count");
 	while (++i < count)
 	{
-		ft_putnbr(i);
-		ft_putendl(" -> i");
-ft_putendl("		TyyyHERE");
-		ft_putnbr(ft_strlen(oldTab[tabIntBis[i]]) + 1);
-		ft_putendl(" -> strlen");
-ft_putendl("		TyyyHERE");
 		newTab[i] = (char *)malloc(sizeof(char) * (ft_strlen(oldTab[tabIntBis[i]]) + 1));
-ft_putendl("		TyyyHERE");
 		ft_bzero(newTab[i], ft_strlen(oldTab[tabIntBis[i]]) + 1);
-ft_putendl("		TyyyHERE");
 		ft_strcat(newTab[i], oldTab[tabIntBis[i]]);
 	}
-ft_putendl("		TyyyHERE");
 	newTab[i] = (char *)malloc(sizeof(char));
 	ft_bzero(newTab[i], 1);
 	return newTab;

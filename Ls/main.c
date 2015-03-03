@@ -48,9 +48,8 @@ char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to
 		elemSorted[0] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
 		elemSorted[1] = (char *)malloc(sizeof(char));
 		ft_bzero(elemSorted[0], ft_strlen(name) + 1);
-		ft_strcat(elemSorted[0], name);
+		ft_strcat(elemSorted[0], "NOTHIN, AND THIS HAS TO BE DEL");
 		ft_bzero(elemSorted[1], 1);
-		closedir(directory);//a voir si ceci ne fait pas bugg le tout, mais en vrai je comprend pas pourquoi ca bug pas sans ca
 		return elemSorted;
 	}
 // ft_putendl("	Directory n'est pas NULL");
@@ -106,6 +105,7 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	path = args[0];
 
 	nbElem = 0;
+	// ft_putendl("here");
 	if (lstat(args[0], &st) == -1)
 	{
 		ft_putstr("On a args[0] = ");
@@ -113,6 +113,7 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 		perror("stat in ft_ls");
 		exit(EXIT_SUCCESS);
 	}
+	// ft_putendl("here");
 	if (!ft_isDir(path))
 		ft_putendl("It s not a dir");
 	else
@@ -120,14 +121,18 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 		if (path[ft_strlen(path) - 1] != '/')
 			path = createStrSuffix(path, "/");
 	}
+	// ft_putendl("her2e");
 	if (ft_isDir(path))
 	totBlock = computeBlocks(path, options);
 
+	// ft_putendl("her244e");
 
 //0 handle -a
 	elemsToShow = getElemstoDisplay(options, args[0], &nbElem);
+	// ft_putendl("hime");
 	if (nbElem > 0)
 	{
+	// ft_putendl("her27e");
 		elemsToShow = sortElems(options, elemsToShow, path);
 
 		ft_putstr(path);
@@ -141,6 +146,7 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 			i = -1;
 			while (elemsToShow && elemsToShow[++i] && elemsToShow[i][0])
 				ft_putendl(elemsToShow[i]);
+
 		}
 
 		if (ft_strchr(options, 'R') && ft_isDir(path))
@@ -150,9 +156,11 @@ void	ft_ls(char *options, char **args, int ac, char *oldPath)
 	}
 	else
 	{
+	// ft_putendl("her26e");
 		ft_putstr(path);
 		ft_putendl(":");
 	}
+	// ft_putendl("her3");
 
 	// getAllDir();
 
@@ -176,10 +184,10 @@ char	**sortFilesAndDir(char **args, int nbArgs)
 	count = -1;
 	index = -1;
 	newArgs = (char **)malloc(sizeof(char *) * (nbArgs + 1));
-	ft_putendl("je rentre ici");
+	// ft_putendl("je rentre ici");
 	while (++count < nbArgs)
 	{
-	ft_putendl("	je rentre ici");
+	// ft_putendl("	je rentre ici");
 		if (!ft_isDir(args[count]))
 		{
 			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
@@ -191,7 +199,7 @@ char	**sortFilesAndDir(char **args, int nbArgs)
 	count = -1;
 	while (++count < nbArgs)
 	{
-	ft_putendl("		je rentre ici");
+	// ft_putendl("		je rentre ici");
 		if (ft_isDir(args[count]))
 		{
 			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
@@ -215,7 +223,7 @@ int		main(int argc, char **argv)
 
 //getOptions
 	options = getOptions(argc, argv, &index);
-	ft_putstr("Options recuperées :   ");
+	ft_putstr("Options recuperées : ");
 	if (*options == '\0')
 		ft_putendl("No options, array is empty");
 	else
@@ -237,18 +245,22 @@ int		main(int argc, char **argv)
 	}
 
 //tri	
-	ft_putstr("argc - INDEX VAUT :");
+	ft_putstr("argc - INDEX VAUT : ");
 	ft_putnbr(argc - index);
 	if (argc - index > 1)
 	{
 		args = sortInAscii(args, NULL, argc - index);
 		if (options && ft_strchr(options, 'r'))
 			args = sortOptionLilR(args, NULL, argc - index);
-		args = sortFilesAndDir(args, argc - index); // faire un sort supplementaire pour trier les fichiers dabord et dossier ensuite
+		if (options && ft_strchr(options, 't'))
+			args = sortOptionLilT(args, NULL, argc - index);
+		args = sortFilesAndDir(args, argc - index);
 	}
 
 
 //ls
+	ft_putendl("\n\n");
+	ft_putendl("		######################################################");
 	ft_putendl("\n\n\n\n\n\n");
 	ft_ls(options, args, argc - index, "\0");
 

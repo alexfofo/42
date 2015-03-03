@@ -38,6 +38,8 @@ char	**sortInAscii(char **oldTab, char **newTab, int count);
 char	*createStrSuffix(char *s1, char *s2);
 int		ft_isDir(char *entityPath);
 char	*duplicateStr(char *str);
+char	**extendTabStr(char **tab, char *str);
+void	printTabStr(char **tab);
 
 void	optionBigR(char *path, char *options);
 

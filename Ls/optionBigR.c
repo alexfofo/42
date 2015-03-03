@@ -7,18 +7,18 @@ void	optionBigR(char *path, char *options)
 	struct dirent	*drnt;
 	struct stat		st;
 	char			**tmp;
+	// char			**tmp2;
 	char			*tmpSuffix;
+	int				count;
 
+// ft_putendl("rentre dans bigR");
+	count = 0;
 	directory = opendir(path);
+	tmp = NULL;
 	if (directory == NULL)
 	{
-		ft_putstr("test path : ");
-		ft_putendl(path);
-		ft_putendl("Pequeño problemo en la functina optionBigR");
-		ft_putendl("Dans ton boule batard");
 		perror("el problemo ");
 		return ;
-		exit(EXIT_SUCCESS);
 	}
 	while ((drnt = readdir(directory)) != NULL)
 	{
@@ -34,24 +34,21 @@ void	optionBigR(char *path, char *options)
 		}
 		if (ft_isDir(tmpSuffix) && ft_strcmp(drnt->d_name, ".") && ft_strcmp(drnt->d_name, ".."))
 		{
-			// tmp = (char **)malloc(sizeof(char *) * 2);
-			// tmp[0] = duplicateStr(tmpSuffix);
-			// tmp[1] = duplicateStr("\0");
-
 			tmp = extendTabStr(tmp, tmpSuffix);
-
-			// tmp[0] = (char *)malloc(sizeof(char) * (ft_strlen(tmpSuffix) + 1));
-			// ft_bzero(tmp[0], (ft_strlen(tmpSuffix) + 1));
-			// ft_strcat(tmp[0], tmpSuffix);
-			// tmp[1] = (char *)malloc(sizeof(char));
-			// ft_bzero(tmp[1], 1);
-
-
-			// ft_putstr("\n");
-// dabord creer un tab, le trier et ensuite le lire
-			// ft_ls(options, tmp, 1, path);
+			// free(tmp);
+			// tmp = tmp2;
+			++count;
 		}
 	}
+	if (tmp == NULL)
+		return ;
+	tmp = sortInAscii(tmp, NULL, count);
+	if (options && ft_strchr(options, 'r'))
+		tmp = sortOptionLilR(tmp, NULL, count);
+	if (options && ft_strchr(options, 't'))
+		tmp = sortOptionLilT(tmp, NULL, count);
+	ft_putstr("\n");
+	ft_ls(options, tmp, count, path);
 	closedir(directory);
 	return ;
 }
