@@ -29,153 +29,111 @@
 
 
 
-char	**getElemstoDisplay(char *options, char *name, int *nbElem)// use dirent to parcourir DIR et stocker ce qui doit l'etre (-a)
+char	**get_elems_to_display(char *options, char *name, int *nb_elem)
 {
-	char			**elemSorted;
+	char			**elem_sorted;
 	DIR				*directory;
 	struct dirent	*drnt;
-	char			*pathName;
+	char			*path_name;
 	int				i;
 
-	elemSorted = NULL;
+	elem_sorted = NULL;
 	directory = opendir(name);
-// ft_putendl("	In getElemstoDisplay");
 	if (directory == NULL)
 	{
-// ft_putendl("	Directory == NULL");
-		*nbElem = 1;
-		elemSorted = (char **)malloc(sizeof(char *) * 2);
-		elemSorted[0] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
-		elemSorted[1] = (char *)malloc(sizeof(char));
-		ft_bzero(elemSorted[0], ft_strlen(name) + 1);
-		ft_strcat(elemSorted[0], "NOTHIN, AND THIS HAS TO BE DEL");
-		ft_bzero(elemSorted[1], 1);
-		return elemSorted;
+		*nb_elem = 1;
+		elem_sorted = (char **)malloc(sizeof(char *) * 2);
+		elem_sorted[0] = (char *)malloc(sizeof(char) * 1);
+		elem_sorted[1] = (char *)malloc(sizeof(char));
+		ft_bzero(elem_sorted[0], 1);
+		ft_bzero(elem_sorted[1], 1);
+		return elem_sorted;
 	}
-// ft_putendl("	Directory n'est pas NULL");
 	i = 0;
 	while ((drnt = readdir(directory)) != NULL)
 	{
-// ft_putendl("	passe dans readdir");
-		pathName = (char *)malloc(sizeof(char) * (ft_strlen(name) + ft_strlen(drnt->d_name) + 1));
-		ft_bzero(pathName, ft_strlen(pathName));
-		ft_strcat(pathName, name);
-		ft_strcat(pathName, drnt->d_name);
-		elemSorted = sortOptionA(options, drnt->d_name, elemSorted, &i);
+		path_name = (char *)malloc(sizeof(char) * (ft_strlen(name)
+			+ ft_strlen(drnt->d_name) + 1));
+		ft_bzero(path_name, ft_strlen(path_name));
+		ft_strcat(path_name, name);
+		ft_strcat(path_name, drnt->d_name);
+		elem_sorted = sort_option_a(options, drnt->d_name, elem_sorted, &i);
 		//free(pathName);
 	}
-	*nbElem = i;
+	*nb_elem = i;
 	closedir(directory);
-	return elemSorted;
+	return elem_sorted;
 }
 
-char	**sortElems(char *options, char **elemToSort, char *path)
+char	**sort_elems(char *options, char **elem_to_sort, char *path)
 {
 	int			count;
 
 	int i = -1;
 	count = 0;
-// ft_putendl("	THERE");
-	while (elemToSort[count] && elemToSort[count][0])
+	while (elem_to_sort[count] && elem_to_sort[count][0])
 		++count;
 
-// ft_putendl("	THERE");
-	elemToSort = sortInAscii(elemToSort, NULL, count);
-// ft_putendl("	THERE");
+	elem_to_sort = sort_in_ascii(elem_to_sort, NULL, count);
 	if (options && ft_strchr(options, 't'))
-		elemToSort = sortOptionLilT(elemToSort, path, count);
+		elem_to_sort = sort_option_lil_t(elem_to_sort, path, count);
 
-// ft_putendl("	THERE");
 	if (options && ft_strchr(options, 'r'))
-		elemToSort = sortOptionLilR(elemToSort, NULL, count);
-// ft_putendl("	THERE");
+		elem_to_sort = sort_option_lil_r(elem_to_sort, NULL, count);
 
-	return elemToSort;
+	return elem_to_sort;
 }
 
-void	ft_ls(char *options, char **args, int ac, char *oldPath)
+void	ft_ls(char *options, char **args, int ac, char *old_path)
 {
 	struct stat		st;
-	int				totBlock;
-	char			**elemsToShow;
+	int				tot_block;
+	char			**elems_to_show;
 	char			*path;
 	int				i;
-	int				nbElem;
+	int				nb_elem;
 
 	path = args[0];
-
-	nbElem = 0;
-	// ft_putendl("here");
+	nb_elem = 0;
 	if (lstat(args[0], &st) == -1)
 	{
-		ft_putstr("On a args[0] = ");
-		ft_putendl(args[0]);
 		perror("stat in ft_ls");
-		exit(EXIT_SUCCESS);
+		exit(1);
 	}
-	// ft_putendl("here");
-	if (!ft_isDir(path))
-		ft_putendl("It s not a dir");
-	else
+	if (ft_is_dir(path) && path[ft_strlen(path) - 1] != '/')
+		path = create_str_suffix(path, "/");
+	if (ft_is_dir(path) && ft_strchr(options, 'l'))
+		tot_block = compute_blocks(path, options);
+	elems_to_show = get_elems_to_display(options, args[0], &nb_elem);
+	ft_putstr(path);
+	ft_putendl(":");
+	if (lstat(path, &st) == -1)
 	{
-		if (path[ft_strlen(path) - 1] != '/')
-			path = createStrSuffix(path, "/");
+		perror("ft_ls");
 	}
-	// ft_putendl("her2e");
-	if (ft_isDir(path))
-	totBlock = computeBlocks(path, options);
-
-	// ft_putendl("her244e");
-
-//0 handle -a
-	elemsToShow = getElemstoDisplay(options, args[0], &nbElem);
-	// ft_putendl("hime");
-	if (nbElem > 0)
+	else if (nb_elem > 0)
 	{
-	// ft_putendl("her27e");
-		elemsToShow = sortElems(options, elemsToShow, path);
-
-		ft_putstr(path);
-		ft_putendl(":");
+		elems_to_show = sort_elems(options, elems_to_show, path);
 		if (ft_strchr(options, 'l'))
-		{
-			optionLilL(path, elemsToShow, totBlock, nbElem);
-		}
+			option_lil_l(path, elems_to_show, tot_block, nb_elem);
 		else
 		{
 			i = -1;
-			while (elemsToShow && elemsToShow[++i] && elemsToShow[i][0])
-				ft_putendl(elemsToShow[i]);
-
+			while (elems_to_show && elems_to_show[++i] && elems_to_show[i][0])
+				ft_putendl(elems_to_show[i]);
 		}
-
-		if (ft_strchr(options, 'R') && ft_isDir(path))
-		{
-			optionBigR(path, options);
-		}
+		if (ft_strchr(options, 'R') && ft_is_dir(path))
+			option_big_r(path, options);
 	}
-	else
-	{
-	// ft_putendl("her26e");
-		ft_putstr(path);
-		ft_putendl(":");
-	}
-	// ft_putendl("her3");
-
-	// getAllDir();
-
-
-
 	if (--ac > 0)
 	{
 		ft_putstr("\n");
-		ft_ls(options, ++args, ac, oldPath);
+		ft_ls(options, ++args, ac, old_path);
 	}
-
 	return ;
 }
 
-char	**sortFilesAndDir(char **args, int nbArgs)
+char	**sort_files_and_dir(char **args, int nb_args)
 {
 	char	**newArgs;
 	int		count;
@@ -183,85 +141,53 @@ char	**sortFilesAndDir(char **args, int nbArgs)
 
 	count = -1;
 	index = -1;
-	newArgs = (char **)malloc(sizeof(char *) * (nbArgs + 1));
-	// ft_putendl("je rentre ici");
-	while (++count < nbArgs)
+	newArgs = (char **)malloc(sizeof(char *) * (nb_args + 1));
+	while (++count < nb_args)
 	{
-	// ft_putendl("	je rentre ici");
-		if (!ft_isDir(args[count]))
-		{
-			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
-			// ft_bzero(newArgs[index], ft_strlen(args[count]) + 1);
-			// ft_strcat(newArgs[index], args[count]);
-			newArgs[++index] = duplicateStr(args[count]);
-		}
+		if (!ft_is_dir(args[count]))
+			newArgs[++index] = duplicate_str(args[count]);
 	}
 	count = -1;
-	while (++count < nbArgs)
+	while (++count < nb_args)
 	{
-	// ft_putendl("		je rentre ici");
-		if (ft_isDir(args[count]))
-		{
-			// newArgs[++index] = (char *)malloc(sizeof(char) * (ft_strlen(args[count]) + 1));
-			// ft_bzero(newArgs[index], ft_strlen(args[count]) + 1);
-			// ft_strcat(newArgs[index], args[count]);
-			newArgs[++index] = duplicateStr(args[count]);
-		}
+		if (ft_is_dir(args[count]))
+			newArgs[++index] = duplicate_str(args[count]);
 	}
-	newArgs[++index] = duplicateStr("\0");
+	newArgs[++index] = duplicate_str("\0");
 	return (newArgs);
 }
 
 int		main(int argc, char **argv)
 {
 	char	*options;
-	int		index; // cet index est passé a getoptions() qui le set a l'index du premier argument
-	int 	i = 0;
+	int		index;
 	char	**args;
 
 	index = 0;
 
-//getOptions
-	options = getOptions(argc, argv, &index);
-	ft_putstr("Options recuperées : ");
-	if (*options == '\0')
-		ft_putendl("No options, array is empty");
-	else
-		ft_putendl(options);
+	options = get_options(argc, argv, &index);
 
-//getArgs
-	args = getArgs(argc, argv, index);
+	args = get_args(argc, argv, index);
 	if (args == NULL)
 	{
 		args = (char **)malloc(sizeof(char *) * 2);
-		args[0] = (char *)malloc(sizeof(char) * 3);
-		args[1] = (char *)malloc(sizeof(char));
-		ft_bzero(args[0], 3);
-		ft_strcat(args[0], "./");
-		ft_bzero(args[1], 1);
+		args[0] = duplicate_str("./\0");
+		args[1] = duplicate_str("\0");
 		++argc;
 		if (index == 0)
 			++index;
 	}
 
-//tri	
-	ft_putstr("argc - INDEX VAUT : ");
-	ft_putnbr(argc - index);
 	if (argc - index > 1)
 	{
-		args = sortInAscii(args, NULL, argc - index);
-		if (options && ft_strchr(options, 'r'))
-			args = sortOptionLilR(args, NULL, argc - index);
+		args = sort_in_ascii(args, NULL, argc - index);
 		if (options && ft_strchr(options, 't'))
-			args = sortOptionLilT(args, NULL, argc - index);
-		args = sortFilesAndDir(args, argc - index);
+			args = sort_option_lil_t(args, NULL, argc - index);
+		if (options && ft_strchr(options, 'r'))
+			args = sort_option_lil_r(args, NULL, argc - index);
+		args = sort_files_and_dir(args, argc - index);
 	}
 
-
-//ls
-	ft_putendl("\n\n");
-	ft_putendl("		######################################################");
-	ft_putendl("\n\n\n\n\n\n");
 	ft_ls(options, args, argc - index, "\0");
 
 	return (0);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ls.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/03/05 15:11:33 by afollin           #+#    #+#             */
+/*   Updated: 2015/03/05 15:11:34 by afollin          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_LS_H
 # define FT_LS_H
 
@@ -15,37 +27,36 @@
 # include <pwd.h>
 
 void	ft_exit(char *msg, char *options, char *word);
-int		checkOption(char *options, char c, char *ref);
-int		checkSpecialOptions(int *tmp, int *index, char *word);
-char	*getOptions(int argc, char **argv, int *index);
-char	**getArgs(int argc, char **argv, int firstArg);
+int		check_opt(char *options, char c, char *ref);
+int		check_special_options(int *tmp, int *index, char *word);
+char	*get_options(int argc, char **argv, int *index);
+char	**get_args(int argc, char **argv, int first_arg);
 
-void	printLastModifTime(time_t mtime);
-void	printOptionL(char *path, char *name);
-int		computeBlocks(char *path, char *options);
-void	optionLilL(char *path, char **elemsToShow, int totBlock, int nbElem);
+// void	print_option_l(char *path, char *name);
+int		compute_blocks(char *path, char *options);
+void	option_lil_l(char *path, char **to_show, int tot_block, int nb_elem);
 
-char	**extendTab(char **tab, char *name);
-char	**sortOptionA(char *options, char *name, char **elemSorted, int *i);
+char	**extend_tab(char **tab, char *name);
+char	**sort_option_a(char *options, char *name, char **elem_sorted, int *i);
 
-char	**sortOptionLilT(char **oldTab, char *path, int count);
-char	**sortOptionLilR(char **oldTab, char **newTab, int count);
+char	**sort_option_lil_t(char **old_tab, char *path, int count);
+char	**sort_option_lil_r(char **old_tab, char **new_tab, int count);
 
-int		strInTabStr(char *str, char **tab, int sizeTab);
-char	*getBiggerStrInTab(char **tab, int count);
-char	**sortInAscii(char **oldTab, char **newTab, int count);
+int		str_in_tab_str(char *str, char **tab, int size_tab);
+char	*get_bigger_str_in_tab(char **tab, int count);
+char	**sort_in_ascii(char **old_tab, char **new_tab, int count);
 
-char	*createStrSuffix(char *s1, char *s2);
-int		ft_isDir(char *entityPath);
-char	*duplicateStr(char *str);
-char	**extendTabStr(char **tab, char *str);
-void	printTabStr(char **tab);
+char	*create_str_suffix(char *s1, char *s2);
+int		ft_is_dir(char *entity_path);
+char	*duplicate_str(char *str);
+char	**extend_tab_str(char **tab, char *str);
+void	print_tab_str(char **tab);
 
-void	optionBigR(char *path, char *options);
+void	option_big_r(char *path, char *options);
 
-char	**getElemstoDisplay(char *options, char *name, int *nbElem);
-char	**sortElems(char *options, char **elemToSort, char *path);
-void	ft_ls(char *options, char **args, int ac, char *oldPath);
-char	**sortFilesAndDir(char **args, int nbArgs);
+char	**get_elems_to_display(char *options, char *name, int *nb_elem);
+char	**sort_elems(char *options, char **elem_to_sort, char *path);
+void	ft_ls(char *options, char **args, int ac, char *old_path);
+char	**sort_files_and_dir(char **args, int nb_args);
 
 #endif

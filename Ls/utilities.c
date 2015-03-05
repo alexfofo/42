@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utilities.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/03/05 14:50:52 by afollin           #+#    #+#             */
+/*   Updated: 2015/03/05 14:50:55 by afollin          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include "ft_ls.h"
 
-char	*createStrSuffix(char *s1, char *s2)
+char	*create_str_suffix(char *s1, char *s2)
 {
 	char	*ret;
 
@@ -9,76 +21,69 @@ char	*createStrSuffix(char *s1, char *s2)
 	ft_bzero(ret, ft_strlen(s1) + ft_strlen(s2) + 1);
 	ft_strcat(ret, s1);
 	ft_strcat(ret, s2);
-
 	return (ret);
 }
 
-int		ft_isDir(char *entityPath)
+int		ft_is_dir(char *entity_path)
 {
 	struct stat		st;
 
-// ft_putendl("is in ftisdir");
-	if (lstat(entityPath, &st) == -1)
+	if (lstat(entity_path, &st) == -1)
 	{
-		ft_putendl(entityPath);
-		perror("stat in ft_isDir in utilities.c");
-		exit(EXIT_SUCCESS);
+		ft_putendl(entity_path);
+		perror("stat in ft_is_dir in utilities.c");
+		exit(1);
 	}
-// ft_putendl("ret1?");
 	if (S_ISDIR(st.st_mode))
-	{
-		// ft_putendl("LA");
 		return (1);
-	}
-// ft_putendl("ret0");
 	return (0);
 }
 
-char	*duplicateStr(char *str)
+char	*duplicate_str(char *str)
 {
 	char	*dup;
-	int		strSize;
+	int		str_size;
 	int		size;
 
-	strSize = ft_strlen(str);
-	size =  strSize + 1;
+	str_size = ft_strlen(str);
+	size = str_size + 1;
 	dup = (char *)malloc(sizeof(char) * size);
 	ft_bzero(dup, size);
-	if (strSize > 0)
+	if (str_size > 0)
 		ft_strcat(dup, str);
-	return dup;
+	return (dup);
 }
 
-char	**extendTabStr(char **tab, char *str)
+char	**extend_tab_str(char **tab, char *str)
 {
 	char	**extended;
-	int		sizeTab;
+	int		size_tab;
 	int		count;
 
-	sizeTab = -1;
+	size_tab = -1;
 	count = -1;
 	if (tab == NULL || tab[0] == NULL)
 	{
 		extended = (char **)malloc(sizeof(char *) * 2);
-		extended[0] = duplicateStr(str);
-		extended[1] = duplicateStr("\0");
+		extended[0] = duplicate_str(str);
+		extended[1] = duplicate_str("\0");
 		return (extended);
 	}
-	while (tab[++sizeTab][0] != '\0')
+	while (tab[++size_tab][0] != '\0')
 		;
-	extended = (char **)malloc(sizeof(char *) * (sizeTab + 2));
-	while (++count < sizeTab)
+	extended = (char **)malloc(sizeof(char *) * (size_tab + 2));
+	while (++count < size_tab)
 	{
-		extended[count] = duplicateStr(tab[count]);
+		extended[count] = duplicate_str(tab[count]);
 		free(tab[count]);
 	}
-	extended[count] = duplicateStr(str);
-	extended[++count] = duplicateStr("\0");
+	extended[count] = duplicate_str(str);
+	extended[++count] = duplicate_str("\0");
 	free(tab);
 	return (extended);
 }
 
-void	printTabStr(char **tab)
+void	print_tab_str(char **tab)
 {
 	int		i;
 
@@ -94,6 +99,3 @@ void	printTabStr(char **tab)
 	ft_putstr("	out printTabStr\n");
 	return ;
 }
-
-
-
