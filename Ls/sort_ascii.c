@@ -76,7 +76,7 @@ char			**sort_in_ascii(char **old_tab, int count)
 	char			**new_tab;
 	int				tab[count];
 	int				norme_tab[2];
-
+	
 	norme_tab[0] = count;
 	i = -1;
 	while (++i < count)
@@ -85,6 +85,7 @@ char			**sort_in_ascii(char **old_tab, int count)
 		return (NULL);
 	new_tab = (char **)malloc(sizeof(char *) * (count + 1));
 	i = -1;
+	
 	while (++i < count)
 	{
 		norme_tab[1] = i;

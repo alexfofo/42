@@ -89,6 +89,25 @@ char	**sort_elems(char *options, char **elem_to_sort, char *path)
 	return elem_to_sort;
 }
 
+static char		*get_dir_name_from_full_path(char *path)
+{
+	int			i;
+	int			flag;
+
+	i = -1;
+	flag = 0;
+	while (path[++i])
+	{
+		if (path[i] == '/')
+			flag = 1;
+	}
+	if (flag == 0)
+		return (path);
+	while (path[--i] != '/')
+		;
+	return (&(path[++i]));
+}
+
 void	ft_ls(char *options, char **args, int ac, int flag)
 {
 	struct stat		st;
@@ -114,7 +133,8 @@ void	ft_ls(char *options, char **args, int ac, int flag)
 	directory = opendir(path);
 	if (directory == NULL && ft_is_dir(path))
 	{
-		perror("ft_ls haha");
+		ft_putstr("ft_ls: ");
+		perror(get_dir_name_from_full_path(path));
 	}
 	else
 	{
@@ -196,7 +216,6 @@ int		main(int argc, char **argv)
 		if (index == 0)
 			++index;
 	}
-
 	if (argc - index > 1)
 	{
 		args = sort_in_ascii(args, argc - index);
@@ -206,9 +225,7 @@ int		main(int argc, char **argv)
 			args = sort_option_lil_r(args, NULL, argc - index);
 		args = sort_files_and_dir(args, argc - index);
 	}
-ft_putendl("\nHAHAHAHA\n");
 	ft_ls(options, args, argc - index, 1);
-
 	return (0);
 }
 
