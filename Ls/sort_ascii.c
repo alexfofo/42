@@ -13,22 +13,20 @@
 #include "libft.h"
 #include "ft_ls.h"
 
-int		str_in_tab_str(char *str, char **tab, int size_tab)
+static int		str_index_in_tab_int(int index, int *tab, int size_tab)
 {
 	int		i;
 
-	if (!tab || !(tab[0]))
-		return (-1);
 	i = -1;
 	while (++i < size_tab)
 	{
-		if (ft_strcmp(tab[i], str) == 0)
+		if (index == tab[i])
 			return (1);
 	}
 	return (0);
 }
 
-char	*get_bigger_str_in_tab(char **tab, int count)
+static char		*get_bigger_str_in_tab(char **tab, int count, int *x)
 {
 	int		i;
 	char	*big;
@@ -40,35 +38,58 @@ char	*get_bigger_str_in_tab(char **tab, int count)
 	while (++i < count)
 	{
 		if (ft_strcmp(big, tab[i]) < 0)
+		{
 			big = tab[i];
+			*x = i;
+		}
 	}
 	return (big);
 }
 
-char	**sort_in_ascii(char **old_tab, char **new_tab, int count)
+static void		fk_norme(char **old_tab, char **new_tab, int *norme_tab, int *tab)
 {
+	char			*small;
+	int				tmp;
 	int				i;
 	int				j;
-	char			*small;
 
+	i = norme_tab[1];
+	small = get_bigger_str_in_tab(old_tab, norme_tab[0], &tmp);
+	j = -1;
+	while (++j < norme_tab[0])
+	{
+		if ((str_index_in_tab_int(j, tab, i) <= 0)
+			&& ft_strcmp(old_tab[j], small) < 0)
+		{
+			small = old_tab[j];
+			tmp = j;
+		}
+	}
+	new_tab[i] = duplicate_str(small);
+	tab[i] = tmp;
+	return ;
+}
+
+char			**sort_in_ascii(char **old_tab, int count)
+{
+	int				i;
+	char			**new_tab;
+	int				tab[count];
+	int				norme_tab[2];
+
+	norme_tab[0] = count;
 	i = -1;
+	while (++i < count)
+		tab[i] = -1;
 	if (old_tab == NULL)
 		return (NULL);
-	if (new_tab == NULL)
-		new_tab = (char **)malloc(sizeof(char *) * (count + 1));
+	new_tab = (char **)malloc(sizeof(char *) * (count + 1));
+	i = -1;
 	while (++i < count)
 	{
-		small = get_bigger_str_in_tab(old_tab, count);
-		j = -1;
-		while (++j < count)
-		{
-			if ((str_in_tab_str(old_tab[j], new_tab, i) <= 0)
-				&& ft_strcmp(old_tab[j], small) < 0)
-				small = old_tab[j];
-		}
-		new_tab[i] = duplicate_str(small);
+		norme_tab[1] = i;
+		fk_norme(old_tab, new_tab, norme_tab, tab);
 	}
-	new_tab[i] = (char *)malloc(sizeof(char));
-	ft_bzero(new_tab[i], 1);
+	new_tab[i] = duplicate_str("\0");
 	return (new_tab);
 }

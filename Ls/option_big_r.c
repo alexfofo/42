@@ -47,19 +47,22 @@ void	option_big_r(char *path, char *options)
 		if (ft_is_dir(tmp_suffix) && ft_strcmp(drnt->d_name, ".")
 			&& ft_strcmp(drnt->d_name, ".."))
 		{
-			tmp = extend_tab_str(tmp, tmp_suffix);
-			++count;
+			if ((!ft_strchr(options, 'a') && (drnt->d_name)[0] != '.') || ft_strchr(options, 'a'))
+			{
+				tmp = extend_tab_str(tmp, tmp_suffix);
+				++count;
+			}
 		}
 	}
 	closedir(directory);
 	if (tmp == NULL)
 		return ;
-	tmp = sort_in_ascii(tmp, NULL, count);
+	tmp = sort_in_ascii(tmp, count);
 	if (options && ft_strchr(options, 't'))
 		tmp = sort_option_lil_t(tmp, NULL, count);
 	if (options && ft_strchr(options, 'r'))
 		tmp = sort_option_lil_r(tmp, NULL, count);
 	ft_putstr("\n");
-	ft_ls(options, tmp, count, path);
+	ft_ls(options, tmp, count, 0);
 	return ;
 }

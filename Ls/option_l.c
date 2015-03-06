@@ -115,9 +115,12 @@ void			option_lil_l(char *path, char **to_show, int tot, int nb_elem)
 	int				i;
 
 	i = -1;
-	ft_putstr("total ");
-	ft_putnbr(tot);
-	ft_putstr("\n");
+	if (ft_is_dir(path))
+	{
+		ft_putstr("total ");
+		ft_putnbr(tot);
+		ft_putstr("\n");
+	}
 	i = -1;
 	while (++i < nb_elem)
 	{

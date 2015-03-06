@@ -39,14 +39,19 @@ char	**get_elems_to_display(char *options, char *name, int *nb_elem)
 
 	elem_sorted = NULL;
 	directory = opendir(name);
-	if (directory == NULL)
+	if (directory == NULL && !ft_is_dir(name))
 	{
 		*nb_elem = 1;
 		elem_sorted = (char **)malloc(sizeof(char *) * 2);
-		elem_sorted[0] = (char *)malloc(sizeof(char) * 1);
-		elem_sorted[1] = (char *)malloc(sizeof(char));
-		ft_bzero(elem_sorted[0], 1);
-		ft_bzero(elem_sorted[1], 1);
+		elem_sorted[0] = duplicate_str(name);
+		elem_sorted[1] = duplicate_str("\0");
+		return elem_sorted;
+	}
+	else if (directory == NULL)
+	{
+		*nb_elem = 0;
+		elem_sorted = (char **)malloc(sizeof(char *) * 1);
+		elem_sorted[0] = duplicate_str("\0");
 		return elem_sorted;
 	}
 	i = 0;
@@ -74,7 +79,7 @@ char	**sort_elems(char *options, char **elem_to_sort, char *path)
 	while (elem_to_sort[count] && elem_to_sort[count][0])
 		++count;
 
-	elem_to_sort = sort_in_ascii(elem_to_sort, NULL, count);
+	elem_to_sort = sort_in_ascii(elem_to_sort, count);
 	if (options && ft_strchr(options, 't'))
 		elem_to_sort = sort_option_lil_t(elem_to_sort, path, count);
 
@@ -84,7 +89,7 @@ char	**sort_elems(char *options, char **elem_to_sort, char *path)
 	return elem_to_sort;
 }
 
-void	ft_ls(char *options, char **args, int ac, char *old_path)
+void	ft_ls(char *options, char **args, int ac, int flag)
 {
 	struct stat		st;
 	int				tot_block;
@@ -92,6 +97,7 @@ void	ft_ls(char *options, char **args, int ac, char *old_path)
 	char			*path;
 	int				i;
 	int				nb_elem;
+	DIR				*directory;
 
 	path = args[0];
 	nb_elem = 0;
@@ -100,35 +106,48 @@ void	ft_ls(char *options, char **args, int ac, char *old_path)
 		perror("stat in ft_ls");
 		exit(1);
 	}
-	if (ft_is_dir(path) && path[ft_strlen(path) - 1] != '/')
-		path = create_str_suffix(path, "/");
-	if (ft_is_dir(path) && ft_strchr(options, 'l'))
-		tot_block = compute_blocks(path, options);
-	elems_to_show = get_elems_to_display(options, args[0], &nb_elem);
-	ft_putstr(path);
-	ft_putendl(":");
-	if (lstat(path, &st) == -1)
+	if ((!flag || ac > 1) && ft_is_dir(path))
 	{
-		perror("ft_ls");
+		ft_putstr(path);
+		ft_putendl(":");
 	}
-	else if (nb_elem > 0)
+	directory = opendir(path);
+	if (directory == NULL && ft_is_dir(path))
 	{
-		elems_to_show = sort_elems(options, elems_to_show, path);
-		if (ft_strchr(options, 'l'))
-			option_lil_l(path, elems_to_show, tot_block, nb_elem);
-		else
+		perror("ft_ls haha");
+	}
+	else
+	{
+		if (directory)
+			closedir(directory);
+		if (ft_is_dir(path) && path[ft_strlen(path) - 1] != '/')
+			path = create_str_suffix(path, "/");
+		if (ft_is_dir(path) && ft_strchr(options, 'l'))
+			tot_block = compute_blocks(path, options);
+		elems_to_show = get_elems_to_display(options, args[0], &nb_elem);
+		if (lstat(path, &st) == -1)
 		{
-			i = -1;
-			while (elems_to_show && elems_to_show[++i] && elems_to_show[i][0])
-				ft_putendl(elems_to_show[i]);
+			perror("ft_ls");
 		}
-		if (ft_strchr(options, 'R') && ft_is_dir(path))
-			option_big_r(path, options);
+		else if (nb_elem > 0)
+		{
+			elems_to_show = sort_elems(options, elems_to_show, path);
+			if (ft_strchr(options, 'l'))
+				option_lil_l(path, elems_to_show, tot_block, nb_elem);
+			else
+			{
+				i = -1;
+				while (elems_to_show && elems_to_show[++i] && elems_to_show[i][0])
+					ft_putendl(elems_to_show[i]);
+			}
+			if (ft_strchr(options, 'R') && ft_is_dir(path))
+				option_big_r(path, options);
+		}
 	}
 	if (--ac > 0)
 	{
 		ft_putstr("\n");
-		ft_ls(options, ++args, ac, old_path);
+		ft_ls(options, ++args, ac, 0);
 	}
 	return ;
 }
@@ -180,15 +199,15 @@ int		main(int argc, char **argv)
 
 	if (argc - index > 1)
 	{
-		args = sort_in_ascii(args, NULL, argc - index);
+		args = sort_in_ascii(args, argc - index);
 		if (options && ft_strchr(options, 't'))
 			args = sort_option_lil_t(args, NULL, argc - index);
 		if (options && ft_strchr(options, 'r'))
 			args = sort_option_lil_r(args, NULL, argc - index);
 		args = sort_files_and_dir(args, argc - index);
 	}
-
-	ft_ls(options, args, argc - index, "\0");
+ft_putendl("\nHAHAHAHA\n");
+	ft_ls(options, args, argc - index, 1);
 
 	return (0);
 }

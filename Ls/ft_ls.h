@@ -42,9 +42,9 @@ char	**sort_option_a(char *options, char *name, char **elem_sorted, int *i);
 char	**sort_option_lil_t(char **old_tab, char *path, int count);
 char	**sort_option_lil_r(char **old_tab, char **new_tab, int count);
 
-int		str_in_tab_str(char *str, char **tab, int size_tab);
-char	*get_bigger_str_in_tab(char **tab, int count);
-char	**sort_in_ascii(char **old_tab, char **new_tab, int count);
+// int		str_in_tab_str(char *str, char **tab, int size_tab);
+// char	*get_bigger_str_in_tab(char **tab, int count);
+char	**sort_in_ascii(char **old_tab, int count);
 
 char	*create_str_suffix(char *s1, char *s2);
 int		ft_is_dir(char *entity_path);
@@ -56,7 +56,7 @@ void	option_big_r(char *path, char *options);
 
 char	**get_elems_to_display(char *options, char *name, int *nb_elem);
 char	**sort_elems(char *options, char **elem_to_sort, char *path);
-void	ft_ls(char *options, char **args, int ac, char *old_path);
+void	ft_ls(char *options, char **args, int ac, int flag);
 char	**sort_files_and_dir(char **args, int nb_args);
 
 #endif
