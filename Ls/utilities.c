@@ -31,7 +31,7 @@ int		ft_is_dir(char *entity_path)
 	if (lstat(entity_path, &st) == -1)
 	{
 		ft_putendl(entity_path);
-		perror("stat in ft_is_dir in utilities.c");
+		perror("ft_ls");
 		exit(1);
 	}
 	if (S_ISDIR(st.st_mode))

@@ -26,17 +26,17 @@
 # include <grp.h>
 # include <pwd.h>
 
-void	ft_exit(char *msg, char *options, char *word);
+// void	ft_exit(char *msg, char *options, char *word);
 int		check_opt(char *options, char c, char *ref);
 int		check_special_options(int *tmp, int *index, char *word);
-char	*get_options(int argc, char **argv, int *index);
+char	*get_options(int argc, char **argv, int *index, int break_flag);
 char	**get_args(int argc, char **argv, int first_arg);
 
 // void	print_option_l(char *path, char *name);
 int		compute_blocks(char *path, char *options);
 void	option_lil_l(char *path, char **to_show, int tot_block, int nb_elem);
 
-char	**extend_tab(char **tab, char *name);
+// char	**extend_tab(char **tab, char *name);
 char	**sort_option_a(char *options, char *name, char **elem_sorted, int *i);
 
 char	**sort_option_lil_t(char **old_tab, char *path, int count);
@@ -52,7 +52,7 @@ char	*duplicate_str(char *str);
 char	**extend_tab_str(char **tab, char *str);
 void	print_tab_str(char **tab);
 
-void	option_big_r(char *path, char *options);
+void	option_big_r(char *path, char *options, int count);
 
 char	**get_elems_to_display(char *options, char *name, int *nb_elem);
 char	**sort_elems(char *options, char **elem_to_sort, char *path);

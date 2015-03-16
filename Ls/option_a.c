@@ -13,63 +13,19 @@
 #include "libft.h"
 #include "ft_ls.h"
 
-char	**extend_tab(char **tab, char *name)
+char	**sort_option_a(char *options, char *name, char **elem_sorted, int *i)
 {
-	int		count;
-	int		i;
-	char	**ret;
+	int			to_add;
 
-	count = 0;
-	if (tab == NULL)
-	{
-		ret = (char **)malloc(sizeof(char *) * 2);
-		ret[0] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
-		ft_bzero(ret[0], ft_strlen(name) + 1);
-		ft_strcat(ret[0], name);
-
-		ret[1] = (char *)malloc(sizeof(char));
-		ft_bzero(ret[1], 1);
-	}
-	else
-	{
-		while (tab[count] && tab[count][0])
-		{
-			++count;
-		}
-		ret = (char **)malloc(sizeof(char *) * (count + 2));
-		count = -1;
-		while (tab[++count] && tab[count][0])
-		{
-			i = 0;
-			while (tab[count][i])
-				++i;
-			ret[count] = (char *)malloc(sizeof(char) * (i + 1));
-			ft_bzero(ret[count], i + 1);
-			ft_strcat(ret[count], tab[count]);
-		}
-		ret[count] = (char *)malloc(sizeof(char) * (ft_strlen(name) + 1));
-		ft_bzero(ret[count], ft_strlen(name) + 1);
-		ft_strcat(ret[count], name);
-		ret[count + 1] = (char *)malloc(sizeof(char));
-		ft_bzero(ret[count + 1], 1);
-	}
-	//free tab
-	return ret;
-}
-
-char	**sort_option_a(char *options, char *name, char **elemSorted, int *i)
-{
-	int			toAdd;
-
-	toAdd = 0;
+	to_add = 0;
 	if (options && ft_strchr(options, 'a'))
-		toAdd = 1;
+		to_add = 1;
 	else if (name && name[0] != '.')
-		toAdd = 1;
-	if (toAdd == 1)
+		to_add = 1;
+	if (to_add == 1)
 	{
-		elemSorted = extend_tab(elemSorted, name);
+		elem_sorted = extend_tab_str(elem_sorted, name);
 		*i = *i + 1;
 	}
-	return elemSorted;
+	return (elem_sorted);
 }

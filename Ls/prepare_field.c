@@ -13,17 +13,18 @@
 #include "libft.h"
 #include "ft_ls.h"
 
-void	ft_exit(char *msg, char *options, char *word)
+static void		ft_exit(char *msg, char *options, char word)
 {
 	if (!options)
 		exit(1);
 	ft_putstr(msg);
-	ft_putendl(word);
+	ft_putchar(word);
+	ft_putendl("\nusage: ft_ls [-Ralrt] [file ...]");
 	exit(0);
 	return ;
 }
 
-int		check_opt(char *options, char c, char *ref)
+int				check_opt(char *options, char c, char *ref)
 {
 	int flag;
 
@@ -43,7 +44,7 @@ int		check_opt(char *options, char c, char *ref)
 	return (flag);
 }
 
-int		check_special_options(int *tmp, int *index, char *word)
+int				check_special_options(int *tmp, int *index, char *word)
 {
 	if (ft_strncmp(word, "-", ft_strlen(word)) == 0)
 	{
@@ -58,36 +59,35 @@ int		check_special_options(int *tmp, int *index, char *word)
 	return (0);
 }
 
-char	*get_options(int argc, char **argv, int *index)
+char			*get_options(int argc, char **argv, int *index, int break_flag)
 {
 	char		*options;
 	int			opt;
 	int			j;
 	int			tmp;
-	int			break_flag;
 
 	options = (char *)malloc(sizeof(char) * 6);
 	ft_bzero(options, 6);
-	break_flag = 0;
 	if ((opt = 0) == 0 && argc == 1)
 		return (options);
-	while (++(*index) < argc && argv[(*index)][0] == '-' && break_flag == 0)
+	while (++(*index) < argc && argv[(*index)][0] == '-' && break_flag != 1)
 	{
 		j = 0;
 		while (argv[(*index)][++j])
 		{
 			if ((tmp = check_opt(options, argv[(*index)][j], "lRart\0")) == 1)
 				options[opt++] = argv[(*index)][j];
+			else
+				break ;
 		}
-		if (check_special_options(&tmp, index, argv[(*index)]) == 1)
-			break_flag = 1;
+		break_flag = check_special_options(&tmp, index, argv[(*index)]);
 		if (tmp == -1)
-			ft_exit("Problem, wrong option: ", options, argv[(*index)]);
+			ft_exit("ft_ls: illegal option -- ", options, argv[(*index)][j]);
 	}
 	return (options);
 }
 
-char	**get_args(int argc, char **argv, int first_arg)
+char			**get_args(int argc, char **argv, int first_arg)
 {
 	char	**args;
 	int		sub;

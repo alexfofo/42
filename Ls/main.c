@@ -27,9 +27,7 @@
 #include <grp.h>
 #include <pwd.h>
 
-
-
-char	**get_elems_to_display(char *options, char *name, int *nb_elem)
+char			**get_elems_to_display(char *options, char *name, int *nb_elem)
 {
 	char			**elem_sorted;
 	DIR				*directory;
@@ -45,14 +43,14 @@ char	**get_elems_to_display(char *options, char *name, int *nb_elem)
 		elem_sorted = (char **)malloc(sizeof(char *) * 2);
 		elem_sorted[0] = duplicate_str(name);
 		elem_sorted[1] = duplicate_str("\0");
-		return elem_sorted;
+		return (elem_sorted);
 	}
 	else if (directory == NULL)
 	{
 		*nb_elem = 0;
 		elem_sorted = (char **)malloc(sizeof(char *) * 1);
 		elem_sorted[0] = duplicate_str("\0");
-		return elem_sorted;
+		return (elem_sorted);
 	}
 	i = 0;
 	while ((drnt = readdir(directory)) != NULL)
@@ -63,30 +61,27 @@ char	**get_elems_to_display(char *options, char *name, int *nb_elem)
 		ft_strcat(path_name, name);
 		ft_strcat(path_name, drnt->d_name);
 		elem_sorted = sort_option_a(options, drnt->d_name, elem_sorted, &i);
-		//free(pathName);
 	}
 	*nb_elem = i;
 	closedir(directory);
-	return elem_sorted;
+	return (elem_sorted);
 }
 
-char	**sort_elems(char *options, char **elem_to_sort, char *path)
+char			**sort_elems(char *options, char **elem_to_sort, char *path)
 {
 	int			count;
+	int			i;
 
-	int i = -1;
+	i = -1;
 	count = 0;
 	while (elem_to_sort[count] && elem_to_sort[count][0])
 		++count;
-
 	elem_to_sort = sort_in_ascii(elem_to_sort, count);
 	if (options && ft_strchr(options, 't'))
 		elem_to_sort = sort_option_lil_t(elem_to_sort, path, count);
-
 	if (options && ft_strchr(options, 'r'))
 		elem_to_sort = sort_option_lil_r(elem_to_sort, NULL, count);
-
-	return elem_to_sort;
+	return (elem_to_sort);
 }
 
 static char		*get_dir_name_from_full_path(char *path)
@@ -108,7 +103,7 @@ static char		*get_dir_name_from_full_path(char *path)
 	return (&(path[++i]));
 }
 
-void	ft_ls(char *options, char **args, int ac, int flag)
+void			ft_ls(char *options, char **args, int ac, int flag)
 {
 	struct stat		st;
 	int				tot_block;
@@ -133,7 +128,7 @@ void	ft_ls(char *options, char **args, int ac, int flag)
 	directory = opendir(path);
 	if (directory == NULL && ft_is_dir(path))
 	{
-		ft_putstr("ft_ls: ");
+		ft_putstr_fd("ft_ls: ", 2);
 		perror(get_dir_name_from_full_path(path));
 	}
 	else
@@ -157,11 +152,12 @@ void	ft_ls(char *options, char **args, int ac, int flag)
 			else
 			{
 				i = -1;
-				while (elems_to_show && elems_to_show[++i] && elems_to_show[i][0])
+				while (elems_to_show && elems_to_show[++i]
+					&& elems_to_show[i][0])
 					ft_putendl(elems_to_show[i]);
 			}
 			if (ft_strchr(options, 'R') && ft_is_dir(path))
-				option_big_r(path, options);
+				option_big_r(path, options, 0);
 		}
 	}
 	if (--ac > 0)
@@ -172,40 +168,38 @@ void	ft_ls(char *options, char **args, int ac, int flag)
 	return ;
 }
 
-char	**sort_files_and_dir(char **args, int nb_args)
+char			**sort_files_and_dir(char **args, int nb_args)
 {
-	char	**newArgs;
+	char	**new_args;
 	int		count;
 	int		index;
 
 	count = -1;
 	index = -1;
-	newArgs = (char **)malloc(sizeof(char *) * (nb_args + 1));
+	new_args = (char **)malloc(sizeof(char *) * (nb_args + 1));
 	while (++count < nb_args)
 	{
 		if (!ft_is_dir(args[count]))
-			newArgs[++index] = duplicate_str(args[count]);
+			new_args[++index] = duplicate_str(args[count]);
 	}
 	count = -1;
 	while (++count < nb_args)
 	{
 		if (ft_is_dir(args[count]))
-			newArgs[++index] = duplicate_str(args[count]);
+			new_args[++index] = duplicate_str(args[count]);
 	}
-	newArgs[++index] = duplicate_str("\0");
-	return (newArgs);
+	new_args[++index] = duplicate_str("\0");
+	return (new_args);
 }
 
-int		main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	char	*options;
 	int		index;
 	char	**args;
 
 	index = 0;
-
-	options = get_options(argc, argv, &index);
-
+	options = get_options(argc, argv, &index, 0);
 	args = get_args(argc, argv, index);
 	if (args == NULL)
 	{
@@ -228,39 +222,3 @@ int		main(int argc, char **argv)
 	ft_ls(options, args, argc - index, 1);
 	return (0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -46,17 +46,17 @@ static char		*get_bigger_str_in_tab(char **tab, int count, int *x)
 	return (big);
 }
 
-static void		fk_norme(char **old_tab, char **new_tab, int *norme_tab, int *tab)
+static void		fk_norme(char **old_tab, char **new_tab, int *normed, int *tab)
 {
 	char			*small;
 	int				tmp;
 	int				i;
 	int				j;
 
-	i = norme_tab[1];
-	small = get_bigger_str_in_tab(old_tab, norme_tab[0], &tmp);
+	i = normed[1];
+	small = get_bigger_str_in_tab(old_tab, normed[0], &tmp);
 	j = -1;
-	while (++j < norme_tab[0])
+	while (++j < normed[0])
 	{
 		if ((str_index_in_tab_int(j, tab, i) <= 0)
 			&& ft_strcmp(old_tab[j], small) < 0)
@@ -76,7 +76,7 @@ char			**sort_in_ascii(char **old_tab, int count)
 	char			**new_tab;
 	int				tab[count];
 	int				norme_tab[2];
-	
+
 	norme_tab[0] = count;
 	i = -1;
 	while (++i < count)
@@ -85,7 +85,6 @@ char			**sort_in_ascii(char **old_tab, int count)
 		return (NULL);
 	new_tab = (char **)malloc(sizeof(char *) * (count + 1));
 	i = -1;
-	
 	while (++i < count)
 	{
 		norme_tab[1] = i;
