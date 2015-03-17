@@ -173,14 +173,12 @@ void			ft_ls(char *options, char **args, int ac, int flag)
 	return ;
 }
 
-char			**sort_files_and_dir(char **args, int nb_args)
+static char			**sort_files_and_dir(char **args, int nb_args, int index)
 {
 	char	**new_args;
 	int		count;
-	int		index;
 
 	count = -1;
-	index = -1;
 	new_args = (char **)malloc(sizeof(char *) * (nb_args + 1));
 	while (++count < nb_args)
 	{
@@ -228,7 +226,7 @@ int				main(int argc, char **argv)
 			args = sort_option_lil_t(args, NULL, argc - index);
 		if (options && ft_strchr(options, 'r'))
 			args = sort_option_lil_r(args, NULL, argc - index);
-		args = sort_files_and_dir(args, argc - index);
+		args = sort_files_and_dir(args, argc - index, -1);
 	}
 	ft_ls(options, args, argc - index, 1);
 	return (0);

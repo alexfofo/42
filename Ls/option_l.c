@@ -74,9 +74,7 @@ static void		just_for_norme_2(struct stat sb, char *name, char *path)
 			ft_putstr(buf);
 		}
 		else
-		{
 			ft_putstr("Error in -> symbolic link stuff");
-		}
 	}
 	return ;
 }
@@ -91,7 +89,6 @@ static void		print_option_l(char *path, char *name)
 	{
 		perror("stat in printOptionL");
 		return ;
-		exit(EXIT_SUCCESS);
 	}
 	just_for_norme_1(sb);
 	ft_putstr((sb.st_mode & S_IWOTH) ? "w" : "-");
@@ -112,6 +109,7 @@ static void		print_option_l(char *path, char *name)
 
 void			option_lil_l(char *path, char **to_show, int tot, int nb_elem)
 {
+	struct stat		sb;
 	int				i;
 
 	i = -1;
@@ -122,6 +120,14 @@ void			option_lil_l(char *path, char **to_show, int tot, int nb_elem)
 		ft_putstr("\n");
 	}
 	i = -1;
+	if (path[ft_strlen(path) - 1] != '/' && lstat(path, &sb) != -1)
+	{
+		if (S_ISLNK(sb.st_mode))
+		{
+			print_option_l(path, path);
+			return ;
+		}
+	}
 	while (++i < nb_elem)
 	{
 		print_option_l(path, to_show[i]);

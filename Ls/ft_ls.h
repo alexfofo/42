@@ -57,6 +57,6 @@ void	option_big_r(char *path, char *options, int count);
 char	**get_elems_to_display(char *options, char *name, int *nb_elem);
 char	**sort_elems(char *options, char **elem_to_sort, char *path);
 void	ft_ls(char *options, char **args, int ac, int flag);
-char	**sort_files_and_dir(char **args, int nb_args);
+// char	**sort_files_and_dir(char **args, int nb_args);
 
 #endif
