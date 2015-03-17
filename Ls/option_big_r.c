@@ -21,7 +21,7 @@ static void		norme_big_r_1(DIR **d, char *path, char *options, char ***tmp)
 	while ((drnt = readdir(*d)) != NULL)
 	{
 		tmp_suffix = create_str_suffix(path, drnt->d_name);
-		if (ft_is_dir(tmp_suffix) && ft_strcmp(drnt->d_name, ".")
+		if (ft_is_dir(tmp_suffix) == 1 && ft_strcmp(drnt->d_name, ".")
 			&& ft_strcmp(drnt->d_name, ".."))
 		{
 			if ((!ft_strchr(options, 'a') && (drnt->d_name)[0] != '.')

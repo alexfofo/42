@@ -85,7 +85,7 @@ static void		print_option_l(char *path, char *name)
 {
 	struct stat		sb;
 
-	if (ft_is_dir(path))
+	if (ft_is_dir(path) == 1)
 		path = create_str_suffix(path, name);
 	if (lstat(path, &sb) == -1)
 	{
@@ -115,7 +115,7 @@ void			option_lil_l(char *path, char **to_show, int tot, int nb_elem)
 	int				i;
 
 	i = -1;
-	if (ft_is_dir(path))
+	if (ft_is_dir(path) == 1)
 	{
 		ft_putstr("total ");
 		ft_putnbr(tot);

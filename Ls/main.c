@@ -115,18 +115,23 @@ void			ft_ls(char *options, char **args, int ac, int flag)
 
 	path = args[0];
 	nb_elem = 0;
-	if (lstat(args[0], &st) == -1)
+	if (lstat(path, &st) == -1)
 	{
-		perror("stat in ft_ls");
-		exit(1);
+		// perror("stat in ft_ls");
+		// exit(1);
+		ft_putstr_fd("ft_ls: ", 2);
+		perror(path);
+		if (--ac > 0)
+			ft_ls(options, ++args, ac, 0);
+		return ;
 	}
-	if ((!flag || ac > 1) && ft_is_dir(path))
+	if ((!flag || ac > 1) && ft_is_dir(path) == 1)
 	{
 		ft_putstr(path);
 		ft_putendl(":");
 	}
 	directory = opendir(path);
-	if (directory == NULL && ft_is_dir(path))
+	if (directory == NULL && ft_is_dir(path) == 1)
 	{
 		ft_putstr_fd("ft_ls: ", 2);
 		perror(get_dir_name_from_full_path(path));
@@ -135,9 +140,9 @@ void			ft_ls(char *options, char **args, int ac, int flag)
 	{
 		if (directory)
 			closedir(directory);
-		if (ft_is_dir(path) && path[ft_strlen(path) - 1] != '/')
+		if (ft_is_dir(path) == 1 && path[ft_strlen(path) - 1] != '/')
 			path = create_str_suffix(path, "/");
-		if (ft_is_dir(path) && ft_strchr(options, 'l'))
+		if (ft_is_dir(path) == 1 && ft_strchr(options, 'l'))
 			tot_block = compute_blocks(path, options);
 		elems_to_show = get_elems_to_display(options, args[0], &nb_elem);
 		if (lstat(path, &st) == -1)
@@ -156,7 +161,7 @@ void			ft_ls(char *options, char **args, int ac, int flag)
 					&& elems_to_show[i][0])
 					ft_putendl(elems_to_show[i]);
 			}
-			if (ft_strchr(options, 'R') && ft_is_dir(path))
+			if (ft_strchr(options, 'R') && ft_is_dir(path) == 1)
 				option_big_r(path, options, 0);
 		}
 	}
@@ -179,13 +184,19 @@ char			**sort_files_and_dir(char **args, int nb_args)
 	new_args = (char **)malloc(sizeof(char *) * (nb_args + 1));
 	while (++count < nb_args)
 	{
+		if (ft_is_dir(args[count]) == -1)
+			new_args[++index] = duplicate_str(args[count]);
+	}
+	count = -1;
+	while (++count < nb_args)
+	{
 		if (!ft_is_dir(args[count]))
 			new_args[++index] = duplicate_str(args[count]);
 	}
 	count = -1;
 	while (++count < nb_args)
 	{
-		if (ft_is_dir(args[count]))
+		if (ft_is_dir(args[count]) == 1)
 			new_args[++index] = duplicate_str(args[count]);
 	}
 	new_args[++index] = duplicate_str("\0");
