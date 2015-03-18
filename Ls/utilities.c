@@ -29,12 +29,7 @@ int		ft_is_dir(char *entity_path)
 	struct stat		st;
 
 	if (lstat(entity_path, &st) == -1)
-	{
-		// ft_putendl(entity_path);
-		// perror("ft_ls in is_dir");
-		// exit(1);
 		return (-1);
-	}
 	if (S_ISDIR(st.st_mode))
 		return (1);
 	return (0);
