@@ -12,23 +12,6 @@
 
 #include "libft.h"
 #include "ft_ls.h"
-#include <unistd.h>
-
-static void		print_last_modif_time(time_t mtime)
-{
-	time_t		cur_time;
-	struct tm	*time_info;
-	char		buffer[80];
-
-	time(&cur_time);
-	time_info = localtime(&mtime);
-	if ((mtime + 15778463) < cur_time || (mtime - 3600) > cur_time)
-		strftime(buffer, 80, "%b %d %Y", time_info);
-	else
-		strftime(buffer, 80, "%b %d %H:%M", time_info);
-	ft_putstr(buffer);
-	return ;
-}
 
 static void		just_for_norme_1(struct stat sb)
 {

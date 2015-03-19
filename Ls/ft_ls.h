@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <string.h>
+# include <unistd.h>
 # include <dirent.h>
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -53,5 +54,7 @@ char	**sort_elems(char *options, char **elem_to_sort, char *path);
 void	ft_ls(char *options, char **args, int ac, int flag);
 
 char	**get_elems_to_display(char *options, char *name, int *nb_elem);
+
+void	print_last_modif_time(time_t mtime);
 
 #endif
