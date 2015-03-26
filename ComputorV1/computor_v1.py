@@ -1,8 +1,9 @@
 # -*- encoding:Latin-1 -*
 
 # a = raw_input("Balance tout: ")
-a = "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0"
-eq = a.split("=")
+# a = "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0"
+full = "3 * X^0 + 1 * X^1 = 0 * X^0 - 1 * X^1 - 3 * X^2"
+eq = full.split("=")
 # print eq
 left_side = eq[0]
 right_side = eq[1]
@@ -30,7 +31,7 @@ while i < len(right_side):
 
 
 def compute_x_n(llist, rlist, n=0):
-	ret = 0
+	ret = .0
 	ref = "*X^" + str(n)
 	for s in llist:
 		if ref in s:
@@ -44,6 +45,10 @@ def compute_x_n(llist, rlist, n=0):
 coef_x0 = compute_x_n(my_list_l, my_list_r, 0)
 coef_x1 = compute_x_n(my_list_l, my_list_r, 1)
 coef_x2 = compute_x_n(my_list_l, my_list_r, 2)
+
+# i = 0
+# while i 
+
 
 # print("Reduced form: {} * X^0")
 def get_reduced_form(coef_x0, coef_x1, coef_x2):
@@ -80,6 +85,16 @@ def get_reduced_form(coef_x0, coef_x1, coef_x2):
 
 print "Reduced form:", get_reduced_form(coef_x0, coef_x1, coef_x2), "= 0"
 
+def hi_complexity():
+	delta_bis = delta * -1
+	complex_tmp = 2 * coef_x2
+	complex_data_a = coef_x1 * -1 / complex_tmp
+	complex_data_b = delta_bis**(.5) / complex_tmp
+	if complex_tmp < 0:
+		complex_tmp = complex_tmp * -1
+	print("{} - i * {}".format(complex_data_a, complex_data_b))
+	print("{} + i * {}".format(complex_data_a, complex_data_b))
+
 if coef_x2 != 0:
 	print("Polynomial degree: 2")
 	deg_max = 2
@@ -99,9 +114,17 @@ if deg_max == 2:
 		print eval( "((-1 * coef_x1) + (delta**(0.5))) / (2*coef_x2)" )
 	elif delta < 0:
 		print "fdp les nombres complexes c'est loiiin, aucun souvenir de comment qu'on fait"
+		hi_complexity()
 	elif delta == 0:
 		print "Discriminant is 0, the solution is:"
 		print eval("-1 * coef_x1 / (2 * coef_x2)")
+
+if deg_max == 1:
+	print eval("-1 * coef_x0 / coef_x1")
+
+if deg_max == 0:
+	print "Hum... Yes ?"
+
 
 
 
