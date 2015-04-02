@@ -15,6 +15,8 @@ def get_any_of(str, match):
 	i = -1
 	for c in str:
 		i += 1
+		if i == 2:
+			continue
 		if c in match:
 			return i
 	return -1
@@ -72,6 +74,7 @@ def get_expo(lst):
 		if k not in list_of_expo:
 			list_of_expo.append(k)
 	return list_of_expo
+
 
 list_of_expo = get_expo(my_list_r + my_list_l)
 for x in list_of_expo:
@@ -163,3 +166,8 @@ if deg_max == 0:
 | 0 + 0 |
 \___=___/"""
 	print "Funny... isn't it?"
+
+
+
+
+
