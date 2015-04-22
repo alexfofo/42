@@ -71,12 +71,90 @@ void		early_exit(int argc, char **argv)
 	return ;
 }
 
+int			count_word(char *str)
+{
+	int		i;
+	int		count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		while (str[i] == ' ' || str[i] == '	')
+			++i;
+		while (str[i] && str[i] != ' ' && str[i] != '	')
+		{
+			++i;
+			if (!str[i] || str[i] == ' ' || str[i] == '	')
+				++count;
+		}
+	}
+	return (count);
+}
+
+char		*get_word_x(char *line, int x)
+{
+	char		*ret;
+	int			i;
+	int			j;
+	int			count;
+
+	ret = NULL;
+	i = 0;
+	count = 0;
+	while (str[i] || count < x)
+	{
+		while (str[i] == ' ' || str[i] == '	')
+			++i;
+		while (str[i] && str[i] != ' ' && str[i] != '	')
+		{
+			++i;
+			if (!str[i] || str[i] == ' ' || str[i] == '	')
+				++count;
+		}
+	}
+	j = 0;
+	while (str[j] == ' ' || str[j] == '	')
+		++j;
+	i = j;
+	while (str[i] && str[i] != ' ' && str[i] != '	')
+		++i;
+	ret = (char *)malloc(sizeof(char) * (i - j + 1));
+	ft_bzero(ret, i - j + 1);
+	count = 0;
+	while (count < i - j)
+		ret[count] = line[j + count];
+	return (ret);
+}
+
+void		do_setenv(char *line, char **env)
+{
+	int		i;
+	int		nb_word;
+
+	i = -1;
+	if (nb_word = count_word(line) != 3)
+	{
+		ft_putendl("usage: setenv {keyword} {value}");
+		return ;
+	}
+
+	while (line[++i])
+	{
+
+	}
+	return ;
+}
+
 void		env_stuff(char *line, int *f, char **env)
 {
 	if (*f)
 		return ;
 	if (!ft_strcmp(line, "env"))
 		print_tab_str(env);
+	if (!ft_strncmp(line, "setenv", 6))
+		do_setenv(line, env);
+
 	return ;
 }
 
