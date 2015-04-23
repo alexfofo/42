@@ -14,6 +14,23 @@
 #include <stdio.h>
 #include "libft.h"
 
+char	*ft_strcat_in_new_str(char *s1, char *s2)
+{
+	int			i;
+	int			sz_1;
+	int			sz_2;
+	char		*ret;
+
+	i = 0;
+	sz_1 = ft_strlen(s1);
+	sz_2 = ft_strlen(s2);
+	ret = (char *)malloc(sizeof(char) * (sz_1 + sz_2 + 1));
+	ft_bzero(ret, sz_1 + sz_2 + 1);
+	ft_strcat(ret, s1);
+	ft_strcat(ret, s2);
+	return (ret);
+}
+
 char    *duplicate_str(char *str)
 {
 	char		*dup;
@@ -27,6 +44,41 @@ char    *duplicate_str(char *str)
 	if (str_size > 0)
 		ft_strcat(dup, str);
 	return (dup);
+}
+
+int			cmp_spe(char *s1, char *s2, char ref);;;;
+
+char		**add_to_env(char **tab, char *keyword, char *value)
+{
+	char		**ret;
+	char		*tmp;
+	int			tab_len;
+	int			count;
+	int			flag_key;
+
+	flag_key = 1;
+	ret = NULL;
+	if (tab == NULL || tab[0] == NULL)
+		return (NULL);
+	tab_len = -1;
+	while (tab[++tab_len] && tab[tab_len][0])
+		flag_key = !ft_strcmp(tab[tab_len], keyword) ? 0 : flag_key;
+	ret = (char **)malloc(sizeof(char *) * (tab_len + 1 + flag_key));
+	ret[tab_len + flag_key] = NULL;//  ??
+	count = -1;
+	while (++count < tab_len)
+	{
+		// ft_putendl(tab[count]);
+		if (ft_strcmp(tab[count], keyword))
+			ret[count] = duplicate_str(tab[count]);
+//		ft_putendl(tab[count]);
+		free(tab[count]);
+	}
+	free(tab);
+	tmp = ft_strcat_in_new_str(keyword, "=");
+	ret[count] = ft_strcat_in_new_str(tmp, value);
+	free(tmp);
+	return (ret);
 }
 
 char		**cp_tab_str(char **tab)
@@ -92,7 +144,7 @@ int			count_word(char *str)
 	return (count);
 }
 
-char		*get_word_x(char *line, int x)
+char		*get_word_x(char *str, int x)
 {
 	char		*ret;
 	int			i;
@@ -102,7 +154,7 @@ char		*get_word_x(char *line, int x)
 	ret = NULL;
 	i = 0;
 	count = 0;
-	while (str[i] || count < x)
+	while (str[i] && count < x)
 	{
 		while (str[i] == ' ' || str[i] == '	')
 			++i;
@@ -112,50 +164,51 @@ char		*get_word_x(char *line, int x)
 			if (!str[i] || str[i] == ' ' || str[i] == '	')
 				++count;
 		}
+
 	}
-	j = 0;
-	while (str[j] == ' ' || str[j] == '	')
-		++j;
-	i = j;
-	while (str[i] && str[i] != ' ' && str[i] != '	')
+	while (str[i] == ' ' || str[i] == '	')
 		++i;
-	ret = (char *)malloc(sizeof(char) * (i - j + 1));
-	ft_bzero(ret, i - j + 1);
-	count = 0;
-	while (count < i - j)
-		ret[count] = line[j + count];
+	j = i;
+	while (str[j] && str[j] != ' ' && str[j] != '	')
+		++j;
+	ret = (char *)malloc(sizeof(char) * (j - i + 1));
+	ft_bzero(ret, j - i + 1);
+	count = -1;
+	while (++count < j - i)
+		ret[count] = str[i + count];
 	return (ret);
 }
 
-void		do_setenv(char *line, char **env)
+char		**do_setenv(char *line, char **env)
 {
 	int		i;
 	int		nb_word;
-
+	char	*keyword;
+	char	*value;
+	char	**ret;
 	i = -1;
-	if (nb_word = count_word(line) != 3)
+	if ((nb_word = count_word(line)) != 3)
 	{
 		ft_putendl("usage: setenv {keyword} {value}");
-		return ;
+		return env;
 	}
+	keyword = get_word_x(line, 1);
+	value = get_word_x(line, 2);
+	ret = add_to_env(env, keyword, value);
 
-	while (line[++i])
-	{
-
-	}
-	return ;
+	return (ret);
 }
 
-void		env_stuff(char *line, int *f, char **env)
+char		**env_stuff(char *line, int *f, char **env)
 {
 	if (*f)
-		return ;
+		return env;
 	if (!ft_strcmp(line, "env"))
 		print_tab_str(env);
 	if (!ft_strncmp(line, "setenv", 6))
-		do_setenv(line, env);
+		env = do_setenv(line, env);
 
-	return ;
+	return (env);
 }
 
 //void		cd_stuff(char *line, int *f)
@@ -177,12 +230,14 @@ int			main(int argc, char **argv, char **env)
 		early_exit(argc, argv);
 	cp_env = cp_tab_str(env);
 	cute_flag = 0;
+	ft_putstr("#$^&*>> ");
 	while (get_next_line(0, &line) > 0)
 	{
 		if (ft_strcmp(line,"exit") == 0)
 			return (1);
-		env_stuff(line, &cute_flag, env);
+		cp_env = env_stuff(line, &cute_flag, cp_env);
 		//		cd_stuff(line, &cute_flag);
+		ft_putstr("#$^&*>> ");
 	}
 	//printf("returned: %d, line: %s\n", returned, line);
 
