@@ -46,39 +46,22 @@ char    *duplicate_str(char *str)
 	return (dup);
 }
 
-int			cmp_spe(char *s1, char *s2, char ref);;;;
+int			cmp_spe(char *s1, char *s2, char ref){
+	int		i;
+	int		j;
+	
+	i = -1;
+	while (s1[++i] && s1[i] != ref)
+		;
+	if (!s1[i])
+		return (-1);
+	j = -1;
 
-char		**add_to_env(char **tab, char *keyword, char *value)
-{
-	char		**ret;
-	char		*tmp;
-	int			tab_len;
-	int			count;
-	int			flag_key;
-
-	flag_key = 1;
-	ret = NULL;
-	if (tab == NULL || tab[0] == NULL)
-		return (NULL);
-	tab_len = -1;
-	while (tab[++tab_len] && tab[tab_len][0])
-		flag_key = !ft_strcmp(tab[tab_len], keyword) ? 0 : flag_key;
-	ret = (char **)malloc(sizeof(char *) * (tab_len + 1 + flag_key));
-	ret[tab_len + flag_key] = NULL;//  ??
-	count = -1;
-	while (++count < tab_len)
-	{
-		// ft_putendl(tab[count]);
-		if (ft_strcmp(tab[count], keyword))
-			ret[count] = duplicate_str(tab[count]);
-//		ft_putendl(tab[count]);
-		free(tab[count]);
+	while (++j < i){
+		if (s1[j] != s2[j])
+			return (-1);
 	}
-	free(tab);
-	tmp = ft_strcat_in_new_str(keyword, "=");
-	ret[count] = ft_strcat_in_new_str(tmp, value);
-	free(tmp);
-	return (ret);
+	return (0);
 }
 
 char		**cp_tab_str(char **tab)
@@ -88,8 +71,11 @@ char		**cp_tab_str(char **tab)
 	int			count;
 
 	ret = NULL;
-	if (tab == NULL || tab[0] == NULL)
-		return (NULL);
+	if (tab == NULL || tab[0] == NULL){
+		ret = (char **)malloc(sizeof(char *) * 1);
+		ret[0] = NULL;
+		return (ret);
+	}
 	tab_len = -1;
 	while (tab[++tab_len] && tab[tab_len][0])
 		;
@@ -179,6 +165,50 @@ char		*get_word_x(char *str, int x)
 	return (ret);
 }
 
+char		**add_to_env(char **tab, char *keyword, char *value)
+{
+	char		**ret;
+	char		*tmp;
+	int			tab_len;
+	int			count;
+	int			flag_key;
+
+	flag_key = 1;
+	ret = NULL;
+	if (tab == NULL || tab[0] == NULL){
+		ret = (char **)malloc(sizeof(char *) * 2);
+		ret[1] = NULL;
+		count = 0;
+		if (tab != NULL)
+			free(tab);
+	}
+	else{
+		tab_len = -1;
+		while (tab[++tab_len] && tab[tab_len][0])
+			flag_key = !cmp_spe(tab[tab_len], keyword, '=') ? 0 : flag_key;
+		ret = (char **)malloc(sizeof(char *) * (tab_len + 1 + flag_key));
+		ret[tab_len + flag_key] = NULL;//  ??
+		count = -1;
+		while (++count < tab_len)
+		{
+			if (cmp_spe(tab[count], keyword, '='))
+				ret[count] = duplicate_str(tab[count]);
+			else{
+				tmp = ft_strcat_in_new_str(keyword, "=");
+				ret[count] = ft_strcat_in_new_str(tmp, value);
+			}
+			free(tab[count]);
+		}
+		free(tab);
+	}
+	if (flag_key == 1){
+		tmp = ft_strcat_in_new_str(keyword, "=");
+		ret[count] = ft_strcat_in_new_str(tmp, value);
+		free(tmp);
+	}
+	return (ret);
+}
+// ya un pb qq part !!! setenv b g, setenv bonjour monsieur, et bim
 char		**do_setenv(char *line, char **env)
 {
 	int		i;
@@ -231,6 +261,10 @@ int			main(int argc, char **argv, char **env)
 	cp_env = cp_tab_str(env);
 	cute_flag = 0;
 	ft_putstr("#$^&*>> ");
+	cp_env = env_stuff("setenv a b", &cute_flag, cp_env);
+	cp_env = env_stuff("setenv b c", &cute_flag, cp_env);
+	cp_env = env_stuff("setenv b i", &cute_flag, cp_env);
+	cp_env = env_stuff("setenv a i", &cute_flag, cp_env);
 	while (get_next_line(0, &line) > 0)
 	{
 		if (ft_strcmp(line,"exit") == 0)
