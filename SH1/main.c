@@ -61,6 +61,8 @@ int			cmp_spe(char *s1, char *s2, char ref){
 		if (s1[j] != s2[j])
 			return (-1);
 	}
+	if (s2[j])
+		return (-1);
 	return (0);
 }
 
@@ -182,12 +184,12 @@ char		**add_to_env(char **tab, char *keyword, char *value)
 		if (tab != NULL)
 			free(tab);
 	}
-	else{
+	else {
 		tab_len = -1;
 		while (tab[++tab_len] && tab[tab_len][0])
 			flag_key = !cmp_spe(tab[tab_len], keyword, '=') ? 0 : flag_key;
 		ret = (char **)malloc(sizeof(char *) * (tab_len + 1 + flag_key));
-		ret[tab_len + flag_key] = NULL;//  ??
+		ret[tab_len + flag_key] = NULL;
 		count = -1;
 		while (++count < tab_len)
 		{
@@ -208,25 +210,73 @@ char		**add_to_env(char **tab, char *keyword, char *value)
 	}
 	return (ret);
 }
-// ya un pb qq part !!! setenv b g, setenv bonjour monsieur, et bim
+
+char	**remove_from_env(char **env, char *keyword){
+	int 		tab_len;
+	int 		flag_key;
+	int 		count;
+	int 		index;
+	char		**ret;
+
+	flag_key = -1;
+	if (env == NULL || env[0] == NULL){
+		ft_putendl("env is null, nothing to remove from env");
+		return env;
+	}
+	tab_len = -1;
+	while (env[++tab_len] && env[tab_len][0])
+		flag_key = !cmp_spe(env[tab_len], keyword, '=') ? tab_len : flag_key;
+	if (flag_key == -1){
+		ft_putendl("keyword not not found");
+		return (env);
+	}
+	else
+		ret = (char **)malloc(sizeof(char *) * tab_len);
+	ret[tab_len - 1] = NULL;
+	count = -1;
+	index = -1;
+	while (++count < tab_len){
+		if (cmp_spe(env[count], keyword, '='))
+			ret[++index] = duplicate_str(env[count]);
+		free(env[count]);
+	}
+	free(env);
+
+
+	return (ret);
+}
+
 char		**do_setenv(char *line, char **env)
 {
 	int		i;
-	int		nb_word;
 	char	*keyword;
 	char	*value;
 	char	**ret;
+
 	i = -1;
-	if ((nb_word = count_word(line)) != 3)
+	if (count_word(line) != 3)
 	{
 		ft_putendl("usage: setenv {keyword} {value}");
-		return env;
+		return (env);
 	}
 	keyword = get_word_x(line, 1);
 	value = get_word_x(line, 2);
 	ret = add_to_env(env, keyword, value);
-
 	return (ret);
+}
+
+char		**do_unsetenv(char *line, char **env)
+{
+	char	*keyword;
+
+	if (count_word(line) != 2)
+	{
+		ft_putendl("usage: unsetenv {keyword}");
+		return (env);
+	}
+	keyword = get_word_x(line, 1);
+	env = remove_from_env(env, keyword);
+	return (env);
 }
 
 char		**env_stuff(char *line, int *f, char **env)
@@ -235,8 +285,10 @@ char		**env_stuff(char *line, int *f, char **env)
 		return env;
 	if (!ft_strcmp(line, "env"))
 		print_tab_str(env);
-	if (!ft_strncmp(line, "setenv", 6))
+	else if (!ft_strncmp(line, "setenv", 6))
 		env = do_setenv(line, env);
+	else if (!ft_strncmp(line, "unsetenv", 8))
+		env = do_unsetenv(line, env);
 
 	return (env);
 }
@@ -277,4 +329,3 @@ int			main(int argc, char **argv, char **env)
 
 	return (0);
 }
-
