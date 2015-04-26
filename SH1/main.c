@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft.h"
+#include <unistd.h> // chdir
 
 char	*ft_strcat_in_new_str(char *s1, char *s2)
 {
@@ -167,6 +168,41 @@ char		*get_word_x(char *str, int x)
 	return (ret);
 }
 
+char		*get_word_x_spe(char *str, int x, char c)
+{
+	char		*ret;
+	int			i;
+	int			j;
+	int			count;
+
+	ret = NULL;
+	i = 0;
+	count = 0;
+	while (str[i] && count < x)
+	{
+		while (str[i] == c)
+			++i;
+		while (str[i] && str[i] != c)
+		{
+			++i;
+			if (!str[i] || str[i] == c)
+				++count;
+		}
+
+	}
+	while (str[i] == c)
+		++i;
+	j = i;
+	while (str[j] && str[j] != c)
+		++j;
+	ret = (char *)malloc(sizeof(char) * (j - i + 1));
+	ft_bzero(ret, j - i + 1);
+	count = -1;
+	while (++count < j - i)
+		ret[count] = str[i + count];
+	return (ret);
+}
+
 char		**add_to_env(char **tab, char *keyword, char *value)
 {
 	char		**ret;
@@ -293,14 +329,58 @@ char		**env_stuff(char *line, int *f, char **env)
 	return (env);
 }
 
-//void		cd_stuff(char *line, int *f)
-//{
-//	if (f)
-//		return ;
-//	return ;
-//}
+void		cd_stuff(char *line, int *f)
+{
+	int 		ret;
+	static char 		buf[256];
+	char 		buftmp[256];
+	char 		*word_1;
+	char 		*word_2;
 
+	if (*f)
+		return ;
+	word_1 = get_word_x(line, 0);
+	if (ft_strcmp(word_1, "cd")){
+		free(word_1);
+		return ;
+	}
+	if (count_word(line) != 2)
+	{
+		ft_putendl("usage: cd {directory}");
+		free(word_1);
+		return ;
+	}
+	word_2 = get_word_x(line, 1);
+	if (!ft_strcmp(word_2, "-")){
+		ret = chdir(buf);
+	}
+	else {
+		getcwd(buf, 256);//il faut changer ca, il faudra use la var d'env OLDPATH
+		ret = chdir(word_2);
+	}
 
+	getcwd(buftmp, 256);//todel, it just simulates pwd
+	ft_putendl(buftmp);//todel, it just simulates pwd
+	//faire "cd", qui use $HOME pour aller a HOME ^^
+	if (ret == -1)
+		ft_putendl_fd("Impossible de changer de repertoire.", 2);
+	free(word_1);
+	free(word_2);
+	return ;
+}
+
+char 		*find_exec_path(char *env_path, char *cmd) // attention a bien envoyer env + 5
+{
+	
+	return (ret);
+}
+
+void		execute_stuff(char *line, int *f){
+	if (*f)
+		return ;
+
+	return ;
+}
 
 int			main(int argc, char **argv, char **env)
 {
@@ -313,16 +393,13 @@ int			main(int argc, char **argv, char **env)
 	cp_env = cp_tab_str(env);
 	cute_flag = 0;
 	ft_putstr("#$^&*>> ");
-	cp_env = env_stuff("setenv a b", &cute_flag, cp_env);
-	cp_env = env_stuff("setenv b c", &cute_flag, cp_env);
-	cp_env = env_stuff("setenv b i", &cute_flag, cp_env);
-	cp_env = env_stuff("setenv a i", &cute_flag, cp_env);
 	while (get_next_line(0, &line) > 0)
 	{
 		if (ft_strcmp(line,"exit") == 0)
 			return (1);
 		cp_env = env_stuff(line, &cute_flag, cp_env);
-		//		cd_stuff(line, &cute_flag);
+		cd_stuff(line, &cute_flag);
+		execute_stuff(line, &cute_flag);
 		ft_putstr("#$^&*>> ");
 	}
 	//printf("returned: %d, line: %s\n", returned, line);
