@@ -188,8 +188,9 @@ char		*get_word_x_spe(char *str, int x, char c)
 			if (!str[i] || str[i] == c)
 				++count;
 		}
-
 	}
+	if (!str[i] && count < x)
+		return (NULL);
 	while (str[i] == c)
 		++i;
 	j = i;
@@ -371,14 +372,42 @@ void		cd_stuff(char *line, int *f)
 
 char 		*find_exec_path(char *env_path, char *cmd) // attention a bien envoyer env + 5
 {
-	
-	return (ret);
+	int 		i;
+	char 		*tmp;
+	char 		*tmp2;
+
+	i = -1;
+	while ((tmp = get_word_x_spe(env_path, ++i, ':')) != NULL){
+		tmp2 = ft_strcat_in_new_str(tmp, "/");
+		free(tmp);
+		tmp = ft_strcat_in_new_str(tmp2, cmd);
+		free(tmp2);
+		if (stat(tmp, NULL) == 0) // NULL ca metonne si ca marche
+			return (tmp);
+		free(tmp);
+	}
+	return (NULL);
 }
 
-void		execute_stuff(char *line, int *f){
+void		do_exec(char *path){
+
+	// fork, excve et tout ca
+	return ;
+}
+
+void		execute_stuff(char *line, int *f, char **env){
+	char 	*path_to_exec;
+	int 	i;
+
+	i = -1;
 	if (*f)
 		return ;
-
+	while (env[++i] && cmp_spe(env[i], "PATH", "="))
+		;
+	if (!env[i])
+		return ;
+	path_to_exec = find_exec_path(env[i] + 5, line);
+	do_exec(path_to_exec);
 	return ;
 }
 
