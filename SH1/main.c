@@ -13,7 +13,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft.h"
-#include <unistd.h> // chdir
+#include <unistd.h> // chdir, execve
+#include <sys/wait.h> // wait
 
 char	*ft_strcat_in_new_str(char *s1, char *s2)
 {
@@ -320,12 +321,18 @@ char		**env_stuff(char *line, int *f, char **env)
 {
 	if (*f)
 		return env;
-	if (!ft_strcmp(line, "env"))
+	if (!ft_strcmp(line, "env")){
 		print_tab_str(env);
-	else if (!ft_strncmp(line, "setenv", 6))
+		*f = 1;
+	}
+	else if (!ft_strncmp(line, "setenv", 6)){
 		env = do_setenv(line, env);
-	else if (!ft_strncmp(line, "unsetenv", 8))
+		*f = 1;
+	}
+	else if (!ft_strncmp(line, "unsetenv", 8)){
 		env = do_unsetenv(line, env);
+		*f = 1;
+	}
 
 	return (env);
 }
@@ -334,7 +341,6 @@ void		cd_stuff(char *line, int *f)
 {
 	int 		ret;
 	static char 		buf[256];
-	char 		buftmp[256];
 	char 		*word_1;
 	char 		*word_2;
 
@@ -360,14 +366,14 @@ void		cd_stuff(char *line, int *f)
 		ret = chdir(word_2);
 	}
 
-	getcwd(buftmp, 256);//todel, it just simulates pwd
-	ft_putendl(buftmp);//todel, it just simulates pwd
 	//faire "cd", qui use $HOME pour aller a HOME ^^
 	if (ret == -1)
 		ft_putendl_fd("Impossible de changer de repertoire.", 2);
 	free(word_1);
 	free(word_2);
+	*f = 1;
 	return ;
+
 }
 
 char 		*find_exec_path(char *env_path, char *cmd) // attention a bien envoyer env + 5
@@ -382,32 +388,58 @@ char 		*find_exec_path(char *env_path, char *cmd) // attention a bien envoyer en
 		free(tmp);
 		tmp = ft_strcat_in_new_str(tmp2, cmd);
 		free(tmp2);
-		if (stat(tmp, NULL) == 0) // NULL ca metonne si ca marche
+		if (access(tmp, F_OK) != -1)
 			return (tmp);
 		free(tmp);
 	}
 	return (NULL);
 }
 
-void		do_exec(char *path){
+void		do_exec(char *path_to_exec, char **tab_str, char **env)
+{
+	pid_t		father;
+	int 		child_status;
 
-	// fork, excve et tout ca
+	father = fork();
+	if (father > 0)
+		wait(&child_status);
+	if (father == 0)
+		execve(path_to_exec, tab_str, env);
 	return ;
 }
 
-void		execute_stuff(char *line, int *f, char **env){
+void		execute_stuff(char **tab_str, int *f, char **env){
 	char 	*path_to_exec;
 	int 	i;
 
 	i = -1;
+	path_to_exec = NULL;
 	if (*f)
 		return ;
-	while (env[++i] && cmp_spe(env[i], "PATH", "="))
+	while (env[++i] && cmp_spe(env[i], "PATH", '='))
 		;
 	if (!env[i])
 		return ;
-	path_to_exec = find_exec_path(env[i] + 5, line);
-	do_exec(path_to_exec);
+	path_to_exec = find_exec_path(env[i] + 5, tab_str[0]);
+	if (path_to_exec != NULL){
+		*f = 1;
+		do_exec(path_to_exec, tab_str, env);
+	}
+	return ;
+}
+
+int 		go_gnl(int i, char **line)
+{
+	ft_putstr("\e[1;37m#$^&\e[0;31m42\e[1;37m*>> \e[0m");
+	return (get_next_line(i, line));
+}
+
+void		unknown_cmd(char *line, int f)
+{
+	if (ft_strcmp(line, "42") == 0)
+		ft_putendl_fd("RPZ ma ptite gueule", 2);
+	else if (f == 0)
+		ft_putendl_fd("Unknown command", 2);
 	return ;
 }
 
@@ -421,17 +453,18 @@ int			main(int argc, char **argv, char **env)
 		early_exit(argc, argv);
 	cp_env = cp_tab_str(env);
 	cute_flag = 0;
-	ft_putstr("#$^&*>> ");
-	while (get_next_line(0, &line) > 0)
+	while (go_gnl(0, &line) > 0)
 	{
+		if (!line || !line[0]){
+			continue ;
+		}
 		if (ft_strcmp(line,"exit") == 0)
 			return (1);
 		cp_env = env_stuff(line, &cute_flag, cp_env);
 		cd_stuff(line, &cute_flag);
-		execute_stuff(line, &cute_flag);
-		ft_putstr("#$^&*>> ");
+		execute_stuff(ft_strsplit(line, ' '), &cute_flag, cp_env);
+		unknown_cmd(line, cute_flag);
+		cute_flag = 0;
 	}
-	//printf("returned: %d, line: %s\n", returned, line);
-
 	return (0);
 }

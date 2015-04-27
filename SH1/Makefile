@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	ft_sh1
+NAME	=	ft_minishell1
 CFLAGS	= 	-Wall -Werror -Wextra
 SRC		= 	main.c
 
