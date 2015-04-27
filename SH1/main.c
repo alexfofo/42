@@ -258,14 +258,14 @@ char	**remove_from_env(char **env, char *keyword){
 
 	flag_key = -1;
 	if (env == NULL || env[0] == NULL){
-		ft_putendl("env is null, nothing to remove from env");
+		ft_putendl_fd("env is null, nothing to remove from env", 2);
 		return env;
 	}
 	tab_len = -1;
 	while (env[++tab_len] && env[tab_len][0])
 		flag_key = !cmp_spe(env[tab_len], keyword, '=') ? tab_len : flag_key;
 	if (flag_key == -1){
-		ft_putendl("keyword not not found");
+		ft_putendl_fd("keyword not found in env", 2);
 		return (env);
 	}
 	else
@@ -294,7 +294,7 @@ char		**do_setenv(char *line, char **env)
 	i = -1;
 	if (count_word(line) != 3)
 	{
-		ft_putendl("usage: setenv {keyword} {value}");
+		ft_putendl_fd("usage: setenv {keyword} {value}", 2);
 		return (env);
 	}
 	keyword = get_word_x(line, 1);
@@ -309,7 +309,7 @@ char		**do_unsetenv(char *line, char **env)
 
 	if (count_word(line) != 2)
 	{
-		ft_putendl("usage: unsetenv {keyword}");
+		ft_putendl_fd("usage: unsetenv {keyword}", 2);
 		return (env);
 	}
 	keyword = get_word_x(line, 1);
@@ -337,40 +337,69 @@ char		**env_stuff(char *line, int *f, char **env)
 	return (env);
 }
 
-void		cd_stuff(char *line, int *f)
+void		cd_stuff(char *line, int *f, char **env)
 {
 	int 		ret;
+	int 		flag_key;
 	static char 		buf[256];
 	char 		*word_1;
 	char 		*word_2;
 
+	flag_key = -1;
 	if (*f)
 		return ;
 	word_1 = get_word_x(line, 0);
+	ret = -1;
+		ft_putendl("START");
 	if (ft_strcmp(word_1, "cd")){
+		ft_putendl("A");
 		free(word_1);
+		ft_putendl("B");
 		return ;
 	}
-	if (count_word(line) != 2)
+		ft_putendl("C");
+	if (count_word(line) > 2)
 	{
-		ft_putendl("usage: cd {directory}");
+		ft_putendl_fd("usage: cd {directory}", 2);
+		ft_putendl("D");
 		free(word_1);
+		ft_putendl("E");
 		return ;
 	}
+		ft_putendl("F");
+	if (count_word(line) == 1){
+		// get env var home s value;
+		while (env[++ret] && env[ret][0])
+			flag_key = !cmp_spe(env[ret], "HOME", '=') ? ret : flag_key;
+		if (flag_key == -1)
+			return ;
+		ret = chdir(env[flag_key] + 5);
+	}
+	ft_putendl("1");
+	ret = -1;
+	ft_putendl("2");
 	word_2 = get_word_x(line, 1);
+	ft_putendl("3");
 	if (!ft_strcmp(word_2, "-")){
 		ret = chdir(buf);
 	}
 	else {
-		getcwd(buf, 256);//il faut changer ca, il faudra use la var d'env OLDPATH
+		getcwd(buf, 256);//on pourrai enlever le static en utilisant env
+	ft_putendl("4888");
+		add_to_env(env, "OLDPWD", buf);
+	ft_putendl("4555");
 		ret = chdir(word_2);
 	}
+	ft_putendl("4");
 
-	//faire "cd", qui use $HOME pour aller a HOME ^^
 	if (ret == -1)
 		ft_putendl_fd("Impossible de changer de repertoire.", 2);
+	ft_putendl("G");
 	free(word_1);
+	ft_putendl("H");
+	ft_putendl("I");
 	free(word_2);
+	ft_putendl("J");
 	*f = 1;
 	return ;
 
@@ -461,7 +490,7 @@ int			main(int argc, char **argv, char **env)
 		if (ft_strcmp(line,"exit") == 0)
 			return (1);
 		cp_env = env_stuff(line, &cute_flag, cp_env);
-		cd_stuff(line, &cute_flag);
+		cd_stuff(line, &cute_flag, env);
 		execute_stuff(ft_strsplit(line, ' '), &cute_flag, cp_env);
 		unknown_cmd(line, cute_flag);
 		cute_flag = 0;
