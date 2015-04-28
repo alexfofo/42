@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
 #include "sh.h"
 
 char		**additionnal_ate_1(int *count, char **tab)

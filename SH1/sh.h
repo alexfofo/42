@@ -13,11 +13,11 @@
 #ifndef SH_H
 # define SH_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include "libft.h"
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <sys/wait.h>
+# include "libft.h"
 
 char		**cd_stuff(char *line, int *f, char **env);
 
@@ -39,8 +39,5 @@ char		*duplicate_str(char *str);
 int			cmp_spe(char *s1, char *s2, char ref);
 char		**cp_tab_str(char **tab);
 void		print_tab_str(char **tab);
-
-
-
 
 #endif

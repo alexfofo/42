@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "sh.h"
 
 char		**additionnal_cs(char *line, char **env, char *word_1, int *f)

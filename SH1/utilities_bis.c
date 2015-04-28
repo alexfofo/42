@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
 #include "sh.h"
 
 char		*ft_strcat_in_new_str(char *s1, char *s2)

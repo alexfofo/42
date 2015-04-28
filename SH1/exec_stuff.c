@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft.h"
 #include "sh.h"
 
 char		*find_exec_path(char *env_path, char *cmd)
