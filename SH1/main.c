@@ -12,6 +12,35 @@
 
 #include "sh.h"
 
+char		*handle_tild(char *home_env, char *line)
+{
+	char	*ret;
+	int		len_hv;
+	int		len_line;
+	int		flag;
+
+	if (!home_env || ft_strlen(home_env) < 5)
+		return (line);
+	home_env += 5;
+	flag = 0;
+	len_hv = ft_strlen(home_env);
+	len_line = ft_strlen(line);
+	ret = line - 1;
+	while (*(++ret))
+		flag = (*ret == '~' ? 1 : flag);
+	if (flag == 0)
+		return (line);
+	ret = (char *)malloc(sizeof(char) * (len_hv + len_line));
+	flag = -1;
+	while (line[++flag] != '~')
+		ret[flag] = line[flag];
+	ft_strcat(ret, home_env);
+	while (line[++flag])
+		ret[flag - 1 + len_hv] = line[flag];
+	free(line);
+	return (ret);
+}
+
 void		early_exit(int argc, char **argv)
 {
 	int		i;
@@ -55,6 +84,7 @@ int			main(int argc, char **argv, char **env)
 			continue ;
 		if (ft_strcmp(line, "exit") == 0)
 			return (1);
+		line = handle_tild(get_env_var(env, "HOME"), line);
 		cp_env = env_stuff(line, &cute_flag, cp_env);
 		cp_env = cd_stuff(line, &cute_flag, cp_env);
 		execute_stuff(ft_strsplit(line, ' '), &cute_flag, cp_env);
