@@ -63,6 +63,7 @@ void		execute_stuff(char **tab_str, int *f, char **env)
 	{
 		*f = 1;
 		do_exec(path_to_exec, tab_str, env);
+		free(path_to_exec);
 	}
 	return ;
 }

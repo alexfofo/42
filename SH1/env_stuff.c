@@ -28,6 +28,8 @@ char		**do_setenv(char *line, char **env)
 	keyword = get_word_x(line, 1);
 	value = get_word_x(line, 2);
 	ret = add_to_env(env, keyword, value);
+	free(keyword);
+	free(value);
 	return (ret);
 }
 
@@ -42,6 +44,7 @@ char		**do_unsetenv(char *line, char **env)
 	}
 	keyword = get_word_x(line, 1);
 	env = remove_from_env(env, keyword);
+	free(keyword);
 	return (env);
 }
 
@@ -51,23 +54,23 @@ char		**env_stuff(char *line, int *f, char **env)
 
 	if (*f)
 		return (env);
+	tmp = get_word_x(line, 0);
 	if (!ft_strcmp(line, "env"))
 	{
 		print_tab_str(env);
 		*f = 1;
 	}
-	else if (!ft_strcmp((tmp = get_word_x(line, 0)), "setenv"))
+	else if (!ft_strcmp(tmp, "setenv"))
 	{
 		env = do_setenv(line, env);
 		*f = 1;
-		free(tmp);
 	}
-	else if (!ft_strcmp((tmp = get_word_x(line, 0)), "unsetenv"))
+	else if (!ft_strcmp(tmp, "unsetenv"))
 	{
 		env = do_unsetenv(line, env);
 		*f = 1;
-		free(tmp);
 	}
+	free(tmp);
 	return (env);
 }
 

@@ -55,6 +55,11 @@ void		early_exit(int argc, char **argv)
 
 int			go_gnl(int i, char **line)
 {
+	if (*line)
+	{
+		ft_bzero(*line, ft_strlen(*line));
+		free(*line);
+	}
 	ft_putstr("\033[1;37m#$^&\033[0;31m42\033[1;37m*>> \033[0m");
 	return (get_next_line(i, line));
 }
