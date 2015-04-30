@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <signal.h>
 #include "sh.h"
 
 char		*handle_tild(char *home_env, char *line)
@@ -79,6 +80,7 @@ int			main(int argc, char **argv, char **env)
 	char		*line;
 	int			cute_flag;
 
+	signal(SIGINT, sigint_handler);
 	if (argc != 1)
 		early_exit(argc, argv);
 	cp_env = cp_tab_str(env);

@@ -10,7 +10,32 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sys/stat.h>
 #include "sh.h"
+
+int			is_dir(char *entity_path)
+{
+	struct stat		st;
+
+	if (lstat(entity_path, &st) == -1)
+		return (-1);
+	if (S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}
+
+int			ft_find(char c, char *s)
+{
+	int		i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] == c)
+			return (1);
+	}
+	return (0);
+}
 
 char		*find_exec_path(char *env_path, char *cmd)
 {
@@ -25,14 +50,14 @@ char		*find_exec_path(char *env_path, char *cmd)
 		free(tmp);
 		tmp = ft_strcat_in_new_str(tmp2, cmd);
 		free(tmp2);
-		if (access(tmp, F_OK) != -1)
+		if (access(tmp, F_OK) != -1 && access(tmp, X_OK) != -1 && !is_dir(tmp))
 			return (tmp);
 		free(tmp);
 	}
 	return (NULL);
 }
 
-void		do_exec(char *path_to_exec, char **tab_str, char **env)
+void		do_exec(char *path_to_exec, char **tab_str, char **env, int *f)
 {
 	pid_t	father;
 	int		child_status;
@@ -42,6 +67,7 @@ void		do_exec(char *path_to_exec, char **tab_str, char **env)
 		wait(&child_status);
 	if (father == 0)
 		execve(path_to_exec, tab_str, env);
+	*f = 1;
 	return ;
 }
 
@@ -59,11 +85,15 @@ void		execute_stuff(char **tab_str, int *f, char **env)
 	if (!env[i])
 		return ;
 	path_to_exec = find_exec_path(env[i] + 5, tab_str[0]);
-	if (path_to_exec != NULL)
+	if (path_to_exec != NULL && !ft_find('/', tab_str[0]))
 	{
-		*f = 1;
-		do_exec(path_to_exec, tab_str, env);
+		do_exec(path_to_exec, tab_str, env, f);
 		free(path_to_exec);
+	}
+	else if (ft_find('/', tab_str[0]) && !is_dir(tab_str[0]))
+	{
+		if (access(tab_str[0], F_OK) != -1 && access(tab_str[0], X_OK) != -1)
+			do_exec("/", tab_str, env, f);
 	}
 	return ;
 }

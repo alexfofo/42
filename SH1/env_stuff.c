@@ -12,6 +12,13 @@
 
 #include "sh.h"
 
+void		sigint_handler(int sig_num)
+{
+	signal(SIGINT, sigint_handler);
+	if (sig_num > -2)
+		ft_putstr("\n\033[1;37m#$^&\033[0;31m42\033[1;37m*>> \033[0m");
+}
+
 char		**do_setenv(char *line, char **env)
 {
 	int		i;

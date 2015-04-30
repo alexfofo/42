@@ -23,6 +23,7 @@ char		**cd_stuff(char *line, int *f, char **env);
 
 void		execute_stuff(char **tab_str, int *f, char **env);
 
+void		sigint_handler(int sig_num);
 char		**env_stuff(char *line, int *f, char **env);
 char		*get_env_var(char **env, char *var);
 
