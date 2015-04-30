@@ -15,8 +15,8 @@
 void		sigint_handler(int sig_num)
 {
 	signal(SIGINT, sigint_handler);
-	if (sig_num > -2)
-		ft_putstr("\n\033[1;37m#$^&\033[0;31m42\033[1;37m*>> \033[0m");
+	if (sig_num > -2 || sig_num < 0)
+		ft_putstr("\n");
 }
 
 char		**get_all_words(char *line)

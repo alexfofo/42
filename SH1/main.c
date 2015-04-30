@@ -87,7 +87,7 @@ int			main(int argc, char **argv, char **env)
 	cute_flag = 0;
 	while (go_gnl(0, &line) > 0)
 	{
-		if (!line || !line[0])
+		if (!line || !line[0] || count_word(line) == 0)
 			continue ;
 		if (ft_strcmp(line, "exit") == 0)
 			return (1);
