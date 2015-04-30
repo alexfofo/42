@@ -94,7 +94,7 @@ int			main(int argc, char **argv, char **env)
 		line = handle_tild(get_env_var(env, "HOME"), line);
 		cp_env = env_stuff(line, &cute_flag, cp_env);
 		cp_env = cd_stuff(line, &cute_flag, cp_env);
-		execute_stuff(ft_strsplit(line, ' '), &cute_flag, cp_env);
+		execute_stuff(get_all_words(line), &cute_flag, cp_env);
 		unknown_cmd(line, cute_flag);
 		cute_flag = 0;
 	}

@@ -23,7 +23,6 @@ char		**cd_stuff(char *line, int *f, char **env);
 
 void		execute_stuff(char **tab_str, int *f, char **env);
 
-void		sigint_handler(int sig_num);
 char		**env_stuff(char *line, int *f, char **env);
 char		*get_env_var(char **env, char *var);
 
@@ -40,5 +39,8 @@ char		*duplicate_str(char *str);
 int			cmp_spe(char *s1, char *s2, char ref);
 char		**cp_tab_str(char **tab);
 void		print_tab_str(char **tab);
+
+void		sigint_handler(int sig_num);
+char		**get_all_words(char *line);
 
 #endif

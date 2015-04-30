@@ -13,7 +13,7 @@
 NAME	=	ft_minishell1
 CFLAGS	= 	-Wall -Werror -Wextra
 SRC		= 	add_rm_env.c cd_stuff.c env_stuff.c exec_stuff.c main.c \
-			utilities.c utilities_bis.c
+			utilities.c utilities_bis.c utilities_ter.c
 
 all:		$(NAME)
 

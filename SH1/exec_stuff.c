@@ -66,7 +66,10 @@ void		do_exec(char *path_to_exec, char **tab_str, char **env, int *f)
 	if (father > 0)
 		wait(&child_status);
 	if (father == 0)
-		execve(path_to_exec, tab_str, env);
+	{
+		if (execve(path_to_exec, tab_str, env) == -1)
+			exit(1);
+	}
 	*f = 1;
 	return ;
 }
@@ -76,6 +79,8 @@ void		execute_stuff(char **tab_str, int *f, char **env)
 	char	*path_to_exec;
 	int		i;
 
+	if (!tab_str || !(tab_str[0]))
+		return ;
 	i = -1;
 	path_to_exec = NULL;
 	if (*f)
@@ -85,7 +90,7 @@ void		execute_stuff(char **tab_str, int *f, char **env)
 	if (!env[i])
 		return ;
 	path_to_exec = find_exec_path(env[i] + 5, tab_str[0]);
-	if (path_to_exec != NULL && !ft_find('/', tab_str[0]))
+	if (path_to_exec != NULL)
 	{
 		do_exec(path_to_exec, tab_str, env, f);
 		free(path_to_exec);
@@ -93,7 +98,7 @@ void		execute_stuff(char **tab_str, int *f, char **env)
 	else if (ft_find('/', tab_str[0]) && !is_dir(tab_str[0]))
 	{
 		if (access(tab_str[0], F_OK) != -1 && access(tab_str[0], X_OK) != -1)
-			do_exec("/", tab_str, env, f);
+			do_exec(tab_str[0], tab_str, env, f);
 	}
 	return ;
 }
