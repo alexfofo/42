@@ -1,9 +1,9 @@
-class pikachu =
+class pikachu (p1:int) (p2:int) (p3:int) (p4:int) =
 	object (self)
-		val health = ref 100
-		val energy = ref 100
-		val hygiene = ref 100
-		val happiness = ref 100
+		val health = ref p1
+		val energy = ref p2
+		val hygiene = ref p3
+		val happiness = ref p4
 
 		method get_health = health
 		method get_energy = energy

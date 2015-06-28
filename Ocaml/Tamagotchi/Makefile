@@ -1,6 +1,6 @@
 NAME = out
 
-SOURCES = pika.ml pikastats.ml pika_object.ml main.ml
+SOURCES = pika.ml pikastats.ml pika_object.ml skull_pixel_art.ml pika_dead.ml main.ml
 
 CAMLC = ocamlc
 CAMLOPT = ocamlopt
