@@ -47,7 +47,7 @@ static void		client(char **argv)
 
 static void		get_sig_serv(int sig)
 {
-	sig = sig;
+	(void)sig;
 }
 
 int				main(int argc, char **argv)
@@ -60,7 +60,7 @@ int				main(int argc, char **argv)
 	}
 	else
 	{
-		ft_error("3 arguments required.");
+		ft_error("usage: ./client {server PID} {message to display in server}");
 		return (1);
 	}
 	return (0);

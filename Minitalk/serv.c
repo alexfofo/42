@@ -19,11 +19,11 @@ static void		ft_end(char **ret)
 	if (ft_strcmp(*ret, "exit") == 0)
 	{
 		free(*ret);
-		ret = NULL;
+		*ret = NULL;
 		exit(0);
 	}
 	free(*ret);
-	ret = NULL;
+	*ret = NULL;
 }
 
 static void		get_sig(int sig)
