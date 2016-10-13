@@ -63,9 +63,10 @@ public class RecastAIClient
                 dispatch_async(dispatch_get_main_queue())
                 {
                     let res = Results(JSONDecoder(response.data!))
-                    let json = try! NSJSONSerialization.JSONObjectWithData(response.data!,  options:NSJSONReadingOptions.MutableContainers) as! [String : AnyObject]
-                    res.results?.raw = json["results"] as? [String : AnyObject]
-                    self.delegate?.recastRequestDone(res.results!)
+                    if let json = try? NSJSONSerialization.JSONObjectWithData(response.data!,  options:NSJSONReadingOptions.MutableContainers) as? [String : AnyObject] {
+                        res.results?.raw = json?["results"] as? [String : AnyObject]
+                        self.delegate?.recastRequestDone(res.results!)
+                    }
                 }
         }
     }
