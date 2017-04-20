@@ -1,0 +1,27 @@
+header ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+header ul li {
+	float: left;
+}
+header ul li a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+.header-btn {
+	color: white;
+	transition: color .5s;
+}
+.btn-right {
+	float: right;
+}
+.header-btn:hover {
+	/*background-color: rgba(0, 200, 255, 0.3);*/
+	color: black;
+}

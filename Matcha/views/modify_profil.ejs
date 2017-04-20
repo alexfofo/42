@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- doit recevoir uName, le nom du user logged -->
+	<title>Matcha - Profil</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+	<link rel="stylesheet" type="text/css" href="/css/header.css">
+	<style type="text/css">
+		body {
+			text-align: center;
+		}
+
+		img {
+			max-height: 100%;
+			max-width: 100%;
+			width: auto;
+			height: auto;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
+		.pix {
+			height: 140px;
+			width: 94px;
+			margin-top: 5px;
+			position: relative;
+			background-color: black;
+		}
+
+		.mainDiv {
+			background-color: white;
+			display: inline-block;
+			border: solid black 10px;
+			min-width: 910px;
+			min-height: 600px;
+			position: relative;
+		}
+
+		#tagSearchField {
+
+			/*font-size: 16px;  Increase font-size */
+			width: 250px;
+			padding: 12px 20px 12px 40px; /* Add some padding */
+			border: 1px solid #ddd; /* Add a grey border */
+			margin-bottom: 12px; /* Add some space below the input */
+		}
+
+		#tagSearchField:focus + ul {
+			display: block;
+			z-index: 2;
+		}
+
+		#myUL {
+			/* Remove default list styling */
+			width: 250px;
+			overflow: scroll;
+			max-height: 150px;
+			/*display: none;*/
+			z-index: 2;
+			list-style-type: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		#myUL li a {
+			border: 1px solid #ddd; /* Add a border to all links */
+			margin-top: -1px; /* Prevent double borders */
+			background-color: #f6f6f6; /* Grey background color */
+			padding: 12px; /* Add some padding */
+			text-decoration: none; /* Remove default text underline */
+			/*font-size: 18px;  Increase the font-size */
+			color: black; /* Add a black text color */
+			display: block; /* Make it into a block element to fill the whole list */
+		}
+
+		#myUL li a:hover {
+			background-color: #eee; /* Add a hover effect to all links */
+		}
+
+		.userTag:hover {
+			cursor: pointer;
+			text-decoration: line-through;
+		}
+	</style>
+</head>
+<body class="w3-light-blue w3-container">
+	<%- include('header.ejs', {username: userInfo.name}); %>
+	<div class="mainDiv" >
+		<h2>Modification du Profil</h2>
+		<br /><br />
+		<form autocomplete="off" enctype="multipart/form-data">
+			<p>Votre genre : 
+			<select>
+				<option value="none" <% if (userInfo.sex == 'None') { %> selected <% } %>>Non renseigné</option>
+				<option value="homme" <% if (userInfo.sex == 'Male') { %> selected <% } %>>Homme</option>
+				<option value="femme" <% if (userInfo.sex == 'Female') { %> selected <% } %>>Femme</option>
+				<option value="autre" <% if (userInfo.sex == 'Other') { %> selected <% } %>>Autre</option>
+			</select>
+			</p><br />
+			<p>Vous êtes intéréssé par des : 
+			<select>
+				<option value="none" <% if (userInfo.target == 'None') { %> selected <% } %>>Non renseigné</option>
+				<option value="homme" <% if (userInfo.target == 'Male') { %> selected <% } %>>Hommes</option>
+				<option value="femme" <% if (userInfo.target == 'Female') { %> selected <% } %>>Femmes</option>
+				<option value="autre" <% if (userInfo.target == 'Other') { %> selected <% } %>>Tous</option>
+			</select>
+			</p><br />
+			<p>Votre bio:</p><textarea rows="4" cols="50"><%= userInfo.bio %></textarea><br />
+			<p>Vos tags:</p>
+			<div style="display: inline-block; max-width: 600px; text-align: center; border: solid red 3px;">
+				<p id="tagsParagraph">
+					<% for (var i = 0; i < userTags.length; i++) { %>
+						<a class="userTag" onclick="removeTag(this)">#<%=userTags[i]%></a>
+					<% } %>
+				</p>
+			</div><br />
+			<div style="border: solid green 2px; max-width: 350px; display: inline-block; position: relative;">
+				<button type="button" style="position: relative; float: right; top: 8px;" onclick="addTag()">Ajouter</button>
+				<input class="focusTrick" type="text" id="tagSearchField" onkeyup="tagOnKeyUp()" placeholder="Search for tags.." style="position: relative; float: left;" onfocus="fun1();">
+				<ul class="focusTrick" id="myUL" style="position: absolute; top: 50px; ">
+					<% for (var i = 0; i < allTags.length; i++) { %>
+						<li class="filterTag focusTrick"><a class="focusTrick" onclick="fillSearchField(this)"><%= allTags[i] %></a></li>
+					<% } %>
+				</ul>
+			</div>
+			<p>Vos photos: </p>
+			<div style="border: solid grey 1px; display: inline-block; width: 400px;">
+				<div class="pix" style="float: left;"><img src="/pictures/<%= userImgs[0].path %>" style=""></div>
+				<p>Votre photo principale.</p>
+				<button type="button">Modifier la photo</button>
+			</div>
+			<% for(var i = 1; i < 5; i++) { %>
+				<br />
+				<div style="border: solid grey 1px; display: inline-block; width: 400px;">
+					<div class="pix" style="float: left;"><img src="pictures/<%= userImgs[i].path %>" style=""></div>
+					<p>Une de vos photos secondaires.</p>
+					<button type="button">Modifier la photo</button>
+				</div>
+			<% } %>
+			<br /><br /><br />
+			<button type="button">Sauvegarder le profil</button>
+			<br /><br /><br />
+		</form>
+	</div>
+
+
+
+
+
+
+
+	<!-- <script src="/socket.io/socket.io.js"></script> -->
+	<!-- <script type="text/javascript">
+		var socket = io.connect('192.168.1.67:8080');
+	</script> -->
+<script>
+
+	var allTags = '<%= allTags %>';
+	allTags = allTags.split(',');
+	var userTags = '<%= userTags %>';
+	userTags = userTags.split(',');
+
+	// fillMyUl();
+	tagOnKeyUp();
+
+	document.addEventListener('click',function(e){
+		if (e.target.className != 'focusTrick')
+			document.getElementById('myUL').style.display = 'none';
+		// console.log(e.target);
+	});
+
+	document.getElementById('myUL').style.display = 'none';
+
+
+	function fun1() {
+		document.getElementById('myUL').style.display = 'block';
+	}
+
+	function fun2() {
+		document.getElementById('myUL').style.display = 'none';
+	}
+
+	// function fillMyUl() {
+	// 	var filterTags = document.querySelectorAll('.filterTag');
+	// 	for (var i = 0; i < filterTags.length; i++) {
+	// 		if (userTags.indexOf(filterTags[i].querySelector('a').text) == -1)
+	// 			filterTags[i].style.display = 'block';
+	// 		else
+	// 			filterTags[i].style.display = 'none';
+	// 	}
+	// }
+
+	function fillSearchField(that) {
+		document.querySelector('#tagSearchField').value = that.text;
+		document.getElementById('myUL').style.display = 'none';
+	}
+
+	function tagOnKeyUp() {
+		// Declare variables
+		var input, filter, ul, li, a, i;
+		input = document.getElementById('tagSearchField');
+		filter = input.value.toUpperCase();
+		ul = document.getElementById("myUL");
+		li = ul.getElementsByTagName('li');
+
+		// Loop through all list items, and hide those who don't match the search query
+		for (i = 0; i < li.length; i++) {
+			a = li[i].getElementsByTagName("a")[0];
+			if (a.innerHTML.toUpperCase().indexOf(filter) > -1 && userTags.indexOf(a.text) == -1) {
+				li[i].style.display = "";
+			}
+			else {
+				li[i].style.display = "none";
+			}
+		}
+	}
+
+	function removeTag(that) {
+		that.parentNode.removeChild(that);
+		var i = userTags.indexOf(that.text.slice(1));
+		if (i > -1){
+			userTags.splice(i, 1);
+			tagOnKeyUp();
+		}
+	}
+
+	function addTag() {
+		var tag = document.querySelector('#tagSearchField').value;
+		if (tag && userTags.indexOf(tag) == -1) {
+			userTags.push(tag);
+			var tagsP = document.querySelector('#tagsParagraph');
+			tagsP.innerHTML += '<a class="userTag" onclick="removeTag(this)">#' + tag + '</a>';
+			document.querySelector('#tagSearchField').value = '';
+			var myUl = document.querySelector('#myUL');
+			myUl.innerHTML += '<li class="filterTag focusTrick"><a class="focusTrick" onclick="fillSearchField(this)">' + tag + '</a></li>'
+			tagOnKeyUp();
+			if (allTags.indexOf(tag) == -1)//useless pour l'instant
+				allTags.push(tag);
+		}
+	}
+</script>
+</body>
+</html>

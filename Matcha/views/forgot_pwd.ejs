@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MATCHA - mot de passe oublié</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+	<style type="text/css">	</style>
+</head>
+<body class="w3-light-blue">
+<div  class="w3-container" style="text-align: center">
+	<h1 class="w3-text-white" style="font-size: 60px"><a href="/" style="text-decoration: none;">Matcha</a></h1>
+	<div class="w3-card-4 w3-container  w3-white" style="min-width: 350px; width: 50%; margin: auto; ">
+	<h4 class="w3-text-blue">Entrez vos coodonnées pour que nous puissions vous envoyer un email de réinitilaisation de votre mot de passe:</h4>
+		<form action="/forgot-pwd-req" method="post" class="w3-container">
+			<p><label class="w3-label w3-text-blue">Nom d'utilisateur</label>
+			<input type="text" name="username" class="w3-input w3-border" required autofocus="" /></p>
+			<p><label class="w3-label w3-text-blue">Adresse mail</label>
+			<input type="text" name="meladress" class="w3-input w3-border" required/></p>
+			<p><input type="submit" name="submit" class="w3-btn w3-blue" /></p>
+		</form>
+	</div>
+</div>
+<br />
+</body>
+</html>

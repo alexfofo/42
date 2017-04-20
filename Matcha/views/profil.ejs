@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Matcha - Profil</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+	<link rel="stylesheet" type="text/css" href="/css/header.css">
+	<style type="text/css">
+		body {
+			text-align: center;
+		}
+		
+		img {
+			max-height: 100%;
+			max-width: 100%;
+			width: auto;
+			height: auto;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
+		.mainDescription {
+			margin: 1em;
+		}
+		.profilePic {
+			background-color: black;
+			height: 300px;
+			width: 200px;
+			float: left;
+			position: relative;
+		}
+		.lilPic {
+			height: 140px;
+			width: 94px;
+			margin-top: 5px;
+			position: relative;
+			background-color: black;
+		}
+		.lilBio {
+			height: 300px;
+			width: 400px;
+			border-left: solid white 10px;
+			float: left;
+			text-align: left;
+			padding: 1em;
+			color: white;
+			position: relative;
+		}
+		.btnModifProfil {
+			position: absolute;
+			top: 0;
+			right: 0;
+			border: dashed white 2px;
+			padding: 3px;
+			transition: color .4s, background-color .4s, border-color .4s;
+		}
+		.btnModifProfil:hover {
+			color: black;
+			background-color: white;
+			border-color: black;
+		}
+	</style>
+</head>
+<body class="w3-light-blue w3-container">
+	<%- include('header.ejs', {username: uName}); %>
+	<div style="background-color: black; display: inline-block; border: solid white 10px;">
+		<div style=" display: inline-block; ">
+			<div class="profilePic mainDescription">
+				<% if (uImgs[0]) { %>
+					<img src="/pictures/<%= uImgs[0].path %>">
+				<% } %>
+			</div>
+			<div class="mainDescription" style="height: 300px; width: 200px; float: left;">
+				<div class="lilPic" style="float: left;">
+					<% if (uImgs[1]) { %>
+						<img src="/pictures/<%= uImgs[1].path %>">
+					<% } %>
+				</div>
+				<div class="lilPic" style="float: right;">
+					<% if (uImgs[2]) { %>
+						<img src="/pictures/<%= uImgs[2].path %>">
+					<% } %>
+				</div>
+				<div class="lilPic" style="float: left;">
+					<% if (uImgs[3]) { %>
+						<img src="/pictures/<%= uImgs[3].path %>">
+					<% } %>
+				</div>
+				<div class="lilPic" style="float: right;">
+					<% if (uImgs[4]) { %>
+						<img src="/pictures/<%= uImgs[4].path %>">
+					<% } %>
+				</div>
+			</div>
+			<div class="mainDescription lilBio">
+				<p style="font-size: 20px; font-weight: bold; text-decoration: underline;"><%= uDescription.name %></p>
+				<p>Genre: <%= uDescription.sex %></p>
+				<p>Intéréssé par: <%= uDescription.target %></p>
+				<p>
+					Tag de description rapide: <% for (var i = 0; i < uTags.length; i++) {%>
+					#<%= uTags[i].tag %>
+					<%}%>
+				</p>
+				<% if (uDescription.isUser == true) { %>
+				<a href="/modify_profil">
+					<div class="btnModifProfil">Modifier mon profil</div>
+				<a>
+				<% } %>
+			</div>
+		</div>
+		<div style="min-height: 500px; width: 600px; color: white; margin: auto; border-top: solid white 3px; padding: 1em;">
+			<h3 style="color: white; ">Biographie</h3>
+			<p><%= uDescription.bio %></p>
+		</div>
+	</div>
+
+
+
+
+
+
+
+	<!-- <script src="/socket.io/socket.io.js"></script> -->
+	<!-- <script type="text/javascript">
+		var socket = io.connect('192.168.1.67:8080');
+	</script> -->
+</body>
+</html>

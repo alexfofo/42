@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Matcha</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+	<style type="text/css">
+		
+		a {
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body class="w3-light-blue">
+	<% if (_message) {%>
+	<div class="w3-container w3-card-4 w3-display-topmiddle w3-pale-<%=_message.color%>" style="width: 100%">
+		<p><%=_message.message%><span onclick="this.parentElement.style.display='none'" class="w3-closebtn">&times;</span></p>
+	</div>
+	<%}%>
+	<br /><br />
+	<div  class="w3-container" style="text-align: center">
+		<h1 class="w3-text-white" style="font-size: 60px">Matcha</h1>
+		<h4 class="w3-text-white">Le site de rencontre pour les Beaux </h4>
+		<div class="w3-card-4 w3-container  w3-white" style="min-width: 350px; width: 50%; margin: auto; ">
+			<form action="/login-attempt" method="post" class="w3-container">
+				<p><label class="w3-label w3-text-blue">Nom d'utilisateur</label>
+				<input type="text" name="username" class="w3-input w3-border" required autofocus="" /></p>
+				<p><label class="w3-label w3-text-blue">Mot de passe</label>
+				<input type="password" name="password" class="w3-input w3-border" required/></p>
+				<p><input type="submit" name="submit" class="w3-btn w3-blue" /></p>
+			</form>
+		</div>
+		<p><a href="/create-account">Créer son compte</a> / <a href="/forgot-pwd">Mot de passe oublié</a></p>
+	</div>
+</body>
+</html>
