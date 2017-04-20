@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/20 09:27:41 by afollin           #+#    #+#             */
-/*   Updated: 2014/01/31 16:07:37 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/13 15:10:15 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 void	ft_putendl(char const *s)
 {
 	if (s != NULL)
-	{
 		write(1, s, ft_strlen(s));
-		write(1, "\n", 1);
-	}
+	write(1, "\n", 1);
 }

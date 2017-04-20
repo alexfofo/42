@@ -6,7 +6,7 @@
 #    By: afollin <afollin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2013/11/20 10:35:18 by afollin           #+#    #+#              #
-#    Updated: 2014/03/12 17:09:46 by afollin          ###   ########.fr        #
+#    Updated: 2015/01/20 11:23:13 by afollin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ SRC			= ft_atoi.c ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c\
 
 OBJ			= $(SRC:.c=.o)
 
-CFLAGS		= -Wall -Werror -Wextra -pedantic
+CFLAGS		= -Wall -Werror -Wextra
 HFLAGS		= -I./includes/
 
 RM			= rm -rf

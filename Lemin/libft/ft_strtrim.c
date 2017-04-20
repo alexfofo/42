@@ -6,14 +6,24 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/27 12:40:24 by afollin           #+#    #+#             */
-/*   Updated: 2014/01/26 20:43:51 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:05:02 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-static int		white_space_catch_zero(const char *s, char *str, int i);
+static int		white_space_catch_zero(const char *s, char *str, int i)
+{
+	while (*s == ' ' || *s == '\n' || *s == '\t')
+		s++;
+	if (*s == '\0')
+	{
+		str[i] = '\0';
+		return (1);
+	}
+	return (0);
+}
 
 char			*ft_strtrim(char const *s)
 {
@@ -39,16 +49,4 @@ char			*ft_strtrim(char const *s)
 	}
 	str[i] = '\0';
 	return (str);
-}
-
-static int		white_space_catch_zero(const char *s, char *str, int i)
-{
-	while (*s == ' ' || *s == '\n' || *s == '\t')
-		s++;
-	if (*s == '\0')
-	{
-		str[i] = '\0';
-		return (1);
-	}
-	return (0);
 }

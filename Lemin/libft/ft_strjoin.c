@@ -6,16 +6,25 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/27 11:37:57 by afollin           #+#    #+#             */
-/*   Updated: 2013/12/06 14:59:20 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:03:43 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "libft.h"
 
-static char	*str_maloc1(char const *s1, char const *s2);
+static char	*str_maloc1(char const *s1, char const *s2)
+{
+	char	*str;
 
-char	*ft_strjoin(char const *s1, char const *s2)
+	str = (char *)malloc(sizeof(char *) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (str == NULL)
+		return (NULL);
+	ft_bzero(str, (ft_strlen(s1) + ft_strlen(s2) + 1));
+	return (str);
+}
+
+char		*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
 	char	*str;
@@ -40,16 +49,5 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		}
 	}
 	str[i] = '\0';
-	return (str);
-}
-
-static char	*str_maloc1(char const *s1, char const *s2)
-{
-	char	*str;
-
-	str = (char *)malloc(sizeof(char *) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (str == NULL)
-		return (NULL);
-	ft_bzero(str, (ft_strlen(s1) + ft_strlen(s2) + 1));
 	return (str);
 }

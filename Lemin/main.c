@@ -3,119 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
+/*   By: afollin <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2014/03/03 14:09:03 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/12 16:53:45 by afollin          ###   ########.fr       */
+/*   Created: 2016/03/07 16:41:32 by afollin           #+#    #+#             */
+/*   Updated: 2016/03/07 16:41:34 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "libft.h"
-#include "lemin2.h"
+#include "lemin.h"
 
-int			main(void)
+int				go_gnl(int i, char **line)
 {
-	t_game		*game;
-	t_link		*hist;
-
-	game = NULL;
-	hist = NULL;
-	if ((game = ft_save_input(game, &hist)) == NULL)
+	if (*line)
 	{
-		cfree();
-		return (-1);
+		ft_bzero(*line, ft_strlen(*line));
+		free(*line);
 	}
-	if (!(game->start) || !(game->end))
-	{
-		cfree();
-		return (-1);
-	}
-	game = ft_find_trail(game, hist);
-	cfree();
-	return (0);
+	return (get_next_line(i, line));
 }
 
-t_game		*ft_find_trail(t_game *game, t_link *hist)
+void			init_resources(t_resources **resources)
 {
-	t_room		*start;
-	t_room		*end;
-	t_link		*path;
-	t_link		*beg;
-
-	if (!(path = (t_link *)gmalloc(sizeof(t_link))))
-		return (NULL);
-	path->name = ft_strdup(game->start);
-	beg = path;
-	start = game->tmp_room;
-	while (ft_strcmp(start->name, game->start))
-			start = start->next;
-	end = game->tmp_room;
-	while (ft_strcmp(end->name, game->end))
-			end = end->next;
-	if (ft_find_path(game, start, end, &path) == 1)
-		ft_print_path(game, beg, hist);
-	else
-		ft_putendl_fd("No trail", 2);
-	return (game);
+	(*resources) = (t_resources *)malloc(sizeof(t_resources));
+	(*resources)->nb_ant = 0;
+	(*resources)->cells = NULL;
+	(*resources)->tubes = NULL;
+	(*resources)->start = NULL;
+	(*resources)->end = NULL;
+	(*resources)->paths = NULL;
+	(*resources)->final_paths = NULL;
+	return ;
 }
 
-int			ft_treat_the_line(int *index, t_game **game, char *line)
-{
-	if (!(ft_strcmp(line, "")))
-		return (ft_error("ERROR", "", -1));
-	*index = ft_check_line(*index, line, *game);
-	if (*index >= 0)
-		*index = ft_save_line(*index, line, *game);
-	if (*index == -1 && !(ft_strcmp(line + 2, "start")))
-		(*game)->i_start = 1;
-	else if (*index == -1)
-		(*game)->i_end = 1;
-	if (*index < 0)
-		*index *= -1;
-	return (0);
-}
-
-t_game		*ft_save_input(t_game *game, t_link **hist)
+t_resources		*check_syntax_and_get_resources(void)
 {
 	char		*line;
-	int			index;
-	t_link		*new;
+	t_resources	*resources;
+	int			parsing_step;
+	int			(*p[3]) (char *line, t_resources *resources);
+	int			flag;
 
-	ft_init_vars(&index, &line, &game);
-	while (index < 3 && get_next_line(0, &line))
+	line = NULL;
+	init_resources(&resources);
+	parsing_step = 0;
+	p[0] = step_get_nb_ant;
+	p[1] = step_get_cells;
+	p[2] = step_get_tubes;
+	while (go_gnl(0, &line))
 	{
-		if (!(new = ft_new_link()))
-			return (NULL);
-		new->name = ft_strdup(line);
-		if (*hist)
-		{
-			new->prev = *hist;
-			(*hist)->next = new;
-		}
-		*hist = new;
-		if (!(line = (char *)c_calls("trim", line)))
-			return (NULL);
-		if (!(is_comment(line)))
-		{
-			if (ft_treat_the_line(&index, &game, line) == -1)
-				return (NULL);
-		}
+		ft_putendl(line);
+		if ((flag = (*p[parsing_step])(line, resources)) == 1)
+			++parsing_step;
+		else if (!ft_strlen(line) || flag == -1)
+			break ;
 	}
-	return (game = (index == 5) ? NULL : game);
+	return (resources);
 }
 
-int			ft_init_vars(int *index, char **line, t_game **game)
+int				main(void)
 {
-	*index = 0;
-	*line = NULL;
-	if (!((*game) = (t_game *)gmalloc(sizeof(t_game))))
-		return (5);
-	(*game)->nb_ant = 0;
-	(*game)->i_start = 0;
-	(*game)->i_end = 0;
-	(*game)->start = NULL;
-	(*game)->end = NULL;
-	(*game)->room = NULL;
-	(*game)->tmp_room = NULL;
+	t_resources		*resources;
+	char			*error_to_print;
+
+	resources = check_syntax_and_get_resources();
+	error_to_print = do_lemin_algo(resources);
+	if (ft_strlen(error_to_print))
+	{
+		ft_putstr_fd(error_to_print, 2);
+		return (-1);
+	}
+	print_walk(resources);
 	return (0);
 }

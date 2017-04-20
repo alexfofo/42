@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/01/22 19:49:22 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/12 16:46:34 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:02:12 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int				ft_list_mal(int i, void *s)
 	if (mal == NULL && i == 1)
 	{
 		if (!(mal = ft_lstnew_mal(s)))
-			return (0) ;
+			return (0);
 	}
 	else if (i == 1)
 	{

@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/23 10:14:54 by afollin           #+#    #+#             */
-/*   Updated: 2013/12/06 14:39:05 by afollin          ###   ########.fr       */
+/*   Updated: 2014/03/13 15:16:22 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_bzero(void *s, size_t n)
 	unsigned char	*b;
 
 	b = (unsigned char *)s;
-	if (n == 0)
+	if (n <= 0)
 		return ;
 	while (n > 0)
 	{

@@ -1,0 +1,39 @@
+PODS:
+  - Alamofire (3.5.1)
+  - ForecastIO (2.1.1)
+  - JSONJoy-Swift (1.0.1)
+  - JSQMessagesViewController (7.3.4):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
+  - RecastAI (2.1.1):
+    - Alamofire
+    - JSONJoy-Swift
+
+DEPENDENCIES:
+  - Alamofire (~> 3.5.0)
+  - ForecastIO (from `https://github.com/sxg/ForecastIO.git`, branch `swift2.3`)
+  - JSONJoy-Swift (~> 1.0.1)
+  - JSQMessagesViewController
+  - RecastAI
+
+EXTERNAL SOURCES:
+  ForecastIO:
+    :branch: swift2.3
+    :git: https://github.com/sxg/ForecastIO.git
+
+CHECKOUT OPTIONS:
+  ForecastIO:
+    :commit: 00694917d0379e8ce17c35f3585d69c76786b44a
+    :git: https://github.com/sxg/ForecastIO.git
+
+SPEC CHECKSUMS:
+  Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
+  ForecastIO: a195c8ec7bd3f23ed856fce1bbf2f141abc45dc8
+  JSONJoy-Swift: d8562a59f5d6b8e96d79949e341ffd53c7a93918
+  JSQMessagesViewController: 39fed975e3c9f8eba7292071e29eeb541d105e66
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  RecastAI: fbd30f5ee187e578613d75089054217f073d5d38
+
+PODFILE CHECKSUM: 720708b2a53363fe70b817eb70688fe91108d956
+
+COCOAPODS: 1.0.1

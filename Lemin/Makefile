@@ -3,65 +3,44 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: afollin <afollin@student.42.fr>            +#+  +:+       +#+         #
+#    By: afollin <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2013/12/23 11:09:10 by afollin           #+#    #+#              #
-#    Updated: 2014/03/12 17:17:42 by afollin          ###   ########.fr        #
+#    Created: 2016/03/07 17:30:21 by afollin           #+#    #+#              #
+#    Updated: 2016/03/07 17:30:22 by afollin          ###   ########.fr        #
 #                                                                              #
-#******************************************************************************#
+# **************************************************************************** #
 
-GCC =		gcc -Wall -Werror -Wextra
-
-LIBH =		./libft/includes/
-
-LIBA =		./libft/libft.a
-
-LIBLS =		./includes/
-
-HDFLAGS =	-I$(LIBH) -I$(LIBLS)
-
-MAKELIB =	make -C libft/
-
+#			attention a bien virer le -g
+GCC =		gcc -Wall -Werror -Wextra -g
 NAME =		lem-in
-
-SRC =		main.c 					\
-			basics.c				\
-			basics2.c				\
-			check_line.c			\
-			save_line.c				\
-			sf_check.c				\
-			sf_save.c				\
-			find_path.c
+SRC =		main.c algo/do_lemin_algo.c parsing/step_get_nb_ant.c \
+			parsing/is_comment_or_command.c utilities.c utilities2.c \
+			parsing/step_get_cells.c parsing/step_get_tubes.c \
+			algo/set_nighs_cells.c algo/get_paths.c algo/get_final_paths.c \
+			print_walk.c
 
 OBJ =		$(SRC:.c=.o)
 
 all:		$(NAME)
 
-$(NAME):	$(OBJ)
-			$(MAKELIB)
-			$(GCC) -o $(NAME) $(OBJ) $(LIBA) $(HDFLAGS)
+lem-in:		$(OBJ)
+			make -C libft
+			$(GCC) -Ilibft/includes/ -I. -o lem-in $(OBJ) libft/libft.a
 
-clean:
-			rm -f $(OBJ)
-
-fclean:		clean
-			rm -f $(NAME)
-			make fclean -C libft/
-
-re:			fclean all
-
-lall:
-			$(MAKELIB)
-
-lclean:
-			$(MAKELIB) clean
-
-lfclean:
-			$(MAKELIB) fclean
-
-lre:		lfclean lall
-
-.PHONY:		clean fclean re all lall lclean lfclean lre
+main.o:		lemin.h
 
 %.o:		%.c
-			$(GCC) $(HDFLAGS) -c $< -o $@
+			$(GCC) -Ilibft/includes/ -I. -o $@ -c $<
+
+.PHONY:		clean fclean re
+
+clean:
+			rm -rf $(OBJ)
+			make clean -C libft/
+
+fclean:
+			rm -rf $(OBJ)
+			rm -rf $(NAME)
+			make fclean -C libft/
+
+re:			fclean $(NAME)

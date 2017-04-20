@@ -6,7 +6,7 @@
 /*   By: afollin <afollin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2013/11/22 11:22:30 by afollin           #+#    #+#             */
-/*   Updated: 2014/03/12 17:07:02 by afollin          ###   ########.fr       */
+/*   Updated: 2015/01/20 11:25:07 by afollin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,4 @@ int					ft_error(char *s1, char *s2, int ret);
 void				*c_calls(char *str, char *s1);
 void				*c_calld(char *str, char *s1, char *s2);
 
-#endif				/* !LIBFT_H */
+#endif
